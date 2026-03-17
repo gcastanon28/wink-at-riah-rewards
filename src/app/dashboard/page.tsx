@@ -35,39 +35,43 @@ export default function Dashboard() {
       <SidebarInset className="flex-1 p-6 md:p-10 lg:p-12 overflow-y-auto">
         <div className="max-w-7xl mx-auto space-y-12">
           {/* Header Section */}
-          <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          {/* Mobile Logo Header */}
+          <div className="md:hidden flex items-center gap-3 mb-4">
+            <img
+              src="/logo.png"
+              alt="Wink At Riah Logo"
+              className="h-12 w-12 rounded-x1 object-contain shadow-lg shadow-primary/20"
+            />
             <div>
-              {/* Mobile Header Logo */}
-<div className="md:hidden flex items-center gap-3 mb-6">
-<img
-src="/logo.png"
-alt="Wink At Riah Logo"
-className="h-12 w-12 rounded-xl object-contain"
-/>
-<div>
-<p className="text-lg font-bold text-primary">Wink At Riah</p>
-<p className="text-sm text-muted-foreground">Lash Rewards</p>
-</div>
-</div>
-              <h1 className="text-4xl md:text-5xl font-headline font-bold mb-2">Welcome back, {clientData?.name ?? "beautiful"}.</h1>
-              <p className="text-muted-foreground font-medium flex items-center gap-2 italic">
-                Ready for your next glow up at Wink At Riah?
-                <Sparkles className="h-4 w-4 text-primary" />
-              </p>
+              <p className="text-lg font-bold text-primary leading-tight">Wink At Riah</p>
+              <p className="text-sm text-muted-foreground leading-tight">Lash Rewards</p>
             </div>
-            <a
-  href="https://winkatriah.glossgenius.com/"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <Button size="lg" className="bg-primary hover:bg-primary/90 text-white">
-    <Calendar className="mr-2 h-5 w-5" />
-    Book Now
-    <ChevronRight className="ml-2 h-4 w-4" />
-  </Button>
-</a>
-          </header>
+          </div>
 
+<header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+  <div>
+    <h1 className="text-4xl md:text-5xl font-headline font-bold mb-2">
+      Welcome back, {clientData?.name ?? "beautiful"}.
+    </h1>
+
+    <p className="text-muted-foreground font-medium flex items-center gap-2 italic">
+      Ready for your next glow up at Wink At Riah?
+      <Sparkles className="h-4 w-4 text-primary" />
+    </p>
+  </div>
+
+  <a
+    href="https://winkatriah.glossgenius.com/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Button size="lg" className="bg-primary hover:bg-primary/90 text-white">
+      <Calendar className="mr-2 h-5 w-5" />
+      Book Now
+      <ChevronRight className="ml-2 h-4 w-4" />
+    </Button>
+  </a>
+</header>
           {/* Main Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Left Column - Stats & History */}
