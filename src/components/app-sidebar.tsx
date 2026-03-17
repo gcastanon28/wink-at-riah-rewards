@@ -62,13 +62,22 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-r border-border">
       <SidebarHeader className="py-6 px-4">
-        <div className="flex items-center gap-3 px-2">
+        <div className="flex flex-col items-center justify-center px-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Sparkles className="h-6 w-6" />
           </div>
-          <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="font-headline text-lg font-bold tracking-tight text-primary">Wink At Riah</span>
-            <span className="text-xs text-muted-foreground uppercase tracking-widest font-semibold text-accent">Rewards</span>
+          <div className="p-6 text-center">
+            <img
+              src="/logo.png"
+              alt="Wink At Riah Logo"
+              className="mx-auto w-44 mb-4 drop-shadow-[0_0_20px_rgba(255,79,198,0.5)]"
+            />
+            <h1 className="text-xl font-bold text-pink-400">
+              Wink At Riah
+            </h1>
+            <p className="text-xs text-white/60">
+              Lash Rewards
+            </p>
           </div>
         </div>
       </SidebarHeader>
@@ -100,11 +109,11 @@ export function AppSidebar() {
       <SidebarFooter className="p-4">
         <Link href="/profile" className="flex items-center gap-3 p-2 rounded-xl hover:bg-muted transition-colors group-data-[collapsible=icon]:p-0">
           <Avatar className="h-10 w-10 border-2 border-primary/20">
-            <AvatarImage src={`https://picsum.photos/seed/${MOCK_USER.name}/100/100`} />
-            <AvatarFallback className="bg-primary text-white">AJ</AvatarFallback>
+            <AvatarImage src={`https://picsum.photos/seed/beauty/100/100`} />
+            <AvatarFallback className="bg-primary text-white">B</AvatarFallback>
           </Avatar>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden overflow-hidden">
-            <span className="text-sm font-semibold truncate">{MOCK_USER.name}</span>
+            <span className="text-sm font-semibold truncate">Beautiful</span>
             <span className="text-xs text-primary font-bold truncate tracking-wide">{MOCK_USER.tier}</span>
           </div>
         </Link>

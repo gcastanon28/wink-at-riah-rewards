@@ -22,11 +22,17 @@ export default function Dashboard() {
                 <Sparkles className="h-4 w-4 text-primary" />
               </p>
             </div>
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold px-8 h-14 rounded-2xl shadow-lg shadow-primary/20 group">
-              <Calendar className="mr-2 h-5 w-5" />
-              Book Now
-              <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
+            <a
+  href="https://winkatriah.glossgenius.com/"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <Button size="lg" className="bg-primary hover:bg-primary/90 text-white">
+    <Calendar className="mr-2 h-5 w-5" />
+    Book Now
+    <ChevronRight className="ml-2 h-4 w-4" />
+  </Button>
+</a>
           </header>
 
           {/* Main Grid */}
