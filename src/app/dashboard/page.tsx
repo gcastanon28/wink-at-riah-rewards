@@ -1,3 +1,5 @@
+"use client";
+
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarInset } from "@/components/ui/sidebar"
 import { PointsOverview } from "@/components/points-overview"
@@ -6,9 +8,28 @@ import { RewardsCatalog } from "@/components/rewards-catalog"
 import { Button } from "@/components/ui/button"
 import { Calendar, ChevronRight, Sparkles } from "lucide-react"
 import Link from "next/link"
+import { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/app/lib/firebase";
 
 export default function Dashboard() {
+  const [clientData, setClientData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchClientData = async () => {
+      const clientId = "rJU09IkgTVlO6hXTWxLQ";
+      const clientRef = doc(db, "clients", clientId);
+      const clientSnap = await getDoc(clientRef);
+
+      if (clientSnap.exists()) {
+        setClientData(clientSnap.data());
+      }
+    };
+    fetchClientData();
+  }, []);
+
   return (
+
     <div className="flex min-h-screen bg-background">
       <AppSidebar />
       <SidebarInset className="flex-1 p-6 md:p-10 lg:p-12 overflow-y-auto">
@@ -16,7 +37,7 @@ export default function Dashboard() {
           {/* Header Section */}
           <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <h1 className="text-4xl md:text-5xl font-headline font-bold mb-2">Welcome back, beautiful.</h1>
+              <h1 className="text-4xl md:text-5xl font-headline font-bold mb-2">Welcome back, {clientData?.name ?? "beautiful"}.</h1>
               <p className="text-muted-foreground font-medium flex items-center gap-2 italic">
                 Ready for your next glow up at Wink At Riah?
                 <Sparkles className="h-4 w-4 text-primary" />
@@ -39,7 +60,7 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Left Column - Stats & History */}
             <div className="lg:col-span-8 space-y-8">
-              <PointsOverview />
+              <PointsOverview clientData={clientData} />
               
               <section className="space-y-6">
                 <div className="flex items-center justify-between">

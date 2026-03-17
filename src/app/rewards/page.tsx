@@ -1,10 +1,29 @@
+"use client";
+
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarInset } from "@/components/ui/sidebar"
 import { RewardsCatalog } from "@/components/rewards-catalog"
-import { MOCK_USER } from "@/app/lib/mock-data"
 import { Gift, Star } from "lucide-react"
+import { useEffect, useState } from "react"
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/app/lib/firebase";
 
 export default function RewardsPage() {
+  const [clientData, setClientData] = useState<any>(null);
+
+useEffect(() => {
+  const fetchClientData = async () => {
+    const clientId = "rJU09IkgTVlO6hXTWxLQ";
+    const clientRef = doc(db, "clients", clientId);
+    const clientSnap = await getDoc(clientRef);
+
+    if (clientSnap.exists()) {
+      setClientData(clientSnap.data());
+    }
+  };
+  fetchClientData();
+}, []);
+
   return (
     <div className="flex min-h-screen bg-background">
       <AppSidebar />
@@ -27,7 +46,7 @@ export default function RewardsPage() {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Lash Point Balance</p>
-                <p className="text-2xl font-bold text-primary">{MOCK_USER.points} Points</p>
+                <p className="text-2xl font-bold text-primary">{clientData?.points ?? 0} Points</p>
               </div>
             </div>
           </header>
@@ -41,5 +60,5 @@ export default function RewardsPage() {
         </div>
       </SidebarInset>
     </div>
-  )
+  );
 }
