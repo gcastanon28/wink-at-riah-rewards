@@ -40,7 +40,7 @@ export default function Dashboard() {
             <img
               src="/logo.png"
               alt="Wink At Riah Logo"
-              className="h-12 w-12 rounded-x1 object-contain shadow-lg shadow-primary/20"
+              className="h-12 w-12 rounded-xl object-contain shadow-lg shadow-primary/20"
             />
             <div>
               <p className="text-lg font-bold text-primary leading-tight">Wink At Riah</p>
