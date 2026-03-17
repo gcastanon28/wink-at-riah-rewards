@@ -37,6 +37,18 @@ export default function Dashboard() {
           {/* Header Section */}
           <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
+              {/* Mobile Header Logo */}
+<div className="md:hidden flex items-center gap-3 mb-6">
+<img
+src="/logo.png"
+alt="Wink At Riah Logo"
+className="h-12 w-12 rounded-xl object-contain"
+/>
+<div>
+<p className="text-lg font-bold text-primary">Wink At Riah</p>
+<p className="text-sm text-muted-foreground">Lash Rewards</p>
+</div>
+</div>
               <h1 className="text-4xl md:text-5xl font-headline font-bold mb-2">Welcome back, {clientData?.name ?? "beautiful"}.</h1>
               <p className="text-muted-foreground font-medium flex items-center gap-2 italic">
                 Ready for your next glow up at Wink At Riah?
