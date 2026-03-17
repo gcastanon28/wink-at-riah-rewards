@@ -36,12 +36,12 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto space-y-12">
           {/* Header Section */}
           {/* Mobile Logo Header */}
-          <div className="md:hidden mb-8">
-            <div className="flex items-center gap-4 rounded-3xl border border-pink-500/20 bg-white/95 px-4 py-4 shadow-[0_0_30px_rgba(236,72,153,0.18)]">
+          <div className="md:hidden mb-8 rounded-3xl border border-pink-500/20 bg-white px-5 py-5 shadow-[0_0_35px_rgba(236,72,153,0.22)]">
+            <div className="flex items-center gap-4">
             <img
               src="/logo.png"
               alt="Wink At Riah Logo"
-              className="h-20 w-20 rounded-2xl object-contain bg-white p-1 shadow-md"
+              className="h-24 w-24 rounded-2xl object-contain bg-white"
             />
             </div>
 
