@@ -1,4 +1,3 @@
-
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarInset } from "@/components/ui/sidebar"
 import { PointsOverview } from "@/components/points-overview"
@@ -13,11 +12,11 @@ export default function PointsPage() {
           <header>
             <div className="flex items-center gap-2 text-primary font-bold mb-2 uppercase tracking-widest text-xs">
               <Star className="h-4 w-4" />
-              Loyalty Statistics
+              Loyalty Perks
             </div>
-            <h1 className="text-4xl md:text-5xl font-headline font-bold">My Points Detail</h1>
+            <h1 className="text-4xl md:text-5xl font-headline font-bold">Rewards Detail</h1>
             <p className="text-muted-foreground mt-2">
-              Deep dive into how you earn and spend your WinkLuxe rewards.
+              Learn how to earn more points and unlock the full Wink At Riah experience.
             </p>
           </header>
 
@@ -27,14 +26,14 @@ export default function PointsPage() {
             <div className="space-y-6">
               <h2 className="text-2xl font-headline font-bold flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-primary" />
-                How to Earn
+                Earn Points
               </h2>
               <div className="space-y-4">
                 {[
-                  { title: "Service Spending", detail: "1 Point per $1 spent", icon: Sparkles },
-                  { title: "Product Purchases", detail: "2 Points per $1 spent", icon: Gift },
-                  { title: "Refer a Friend", detail: "100 Points per referral", icon: Star },
-                  { title: "Birthday Reward", detail: "50 Bonus Points", icon: Gift },
+                  { title: "Lash Services", detail: "1 Point per $1 spent", icon: Sparkles },
+                  { title: "Aftercare Products", detail: "2 Points per $1 spent", icon: Gift },
+                  { title: "Refer a Bestie", detail: "100 Points per referral", icon: Star },
+                  { title: "Birthday Treat", detail: "50 Bonus Points", icon: Gift },
                 ].map((item, i) => (
                   <div key={i} className="bg-card p-5 rounded-2xl border border-border/50 shadow-sm flex items-center gap-4">
                     <div className="bg-primary/10 p-3 rounded-xl">
@@ -52,26 +51,26 @@ export default function PointsPage() {
             <div className="space-y-6">
               <h2 className="text-2xl font-headline font-bold flex items-center gap-2">
                 <Gift className="h-5 w-5 text-primary" />
-                Tier Benefits
+                Lash VIP Benefits
               </h2>
               <div className="bg-gradient-to-br from-primary/10 to-transparent p-8 rounded-3xl border border-primary/20 space-y-4">
-                <h3 className="font-headline text-xl font-bold text-primary">Diamond Tier Status</h3>
+                <h3 className="font-headline text-xl font-bold text-primary">VIP Member Perks</h3>
                 <ul className="space-y-3">
                   <li className="text-sm flex items-start gap-2">
                     <Sparkles className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-                    <span>Free lash bath with every full set</span>
+                    <span>Free Lash Bath with every full set session</span>
                   </li>
                   <li className="text-sm flex items-start gap-2">
                     <Sparkles className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-                    <span>Early access to seasonal booking slots</span>
+                    <span>Exclusive early access to holiday booking slots</span>
                   </li>
                   <li className="text-sm flex items-start gap-2">
                     <Sparkles className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-                    <span>10% discount on all aftercare products</span>
+                    <span>10% Discount on all lash aftercare products</span>
                   </li>
-                  <li className="text-sm flex items-start gap-2 text-muted-foreground line-through decoration-primary/50">
-                    <Sparkles className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
-                    <span>Priority same-day fill requests (Platinum only)</span>
+                  <li className="text-sm flex items-start gap-2">
+                    <Sparkles className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <span>VIP priority standby for same-day fill openings</span>
                   </li>
                 </ul>
               </div>

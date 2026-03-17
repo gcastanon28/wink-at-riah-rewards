@@ -1,4 +1,3 @@
-
 "use client"
 
 import { Progress } from "@/components/ui/progress"
@@ -18,8 +17,8 @@ export function PointsOverview() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="font-headline text-3xl mb-1">Your Sparkle</CardTitle>
-            <CardDescription className="text-muted-foreground font-medium">Currently in {MOCK_USER.tier} Tier</CardDescription>
+            <CardTitle className="font-headline text-3xl mb-1">Your Lash Rewards</CardTitle>
+            <CardDescription className="text-muted-foreground font-medium">Status: <span className="text-primary font-bold">{MOCK_USER.tier} Member</span></CardDescription>
           </div>
           <div className="bg-primary/20 p-2 rounded-lg">
             <TrendingUp className="h-6 w-6 text-primary" />
@@ -34,11 +33,11 @@ export function PointsOverview() {
         
         <div className="space-y-3">
           <div className="flex justify-between text-sm font-semibold">
-            <span className="text-muted-foreground">Progress to Next Reward</span>
-            <span className="text-primary">{remaining} points left</span>
+            <span className="text-muted-foreground">Progress to Next Gift</span>
+            <span className="text-primary">{remaining} points remaining</span>
           </div>
           <Progress value={progressPercent} className="h-3 bg-muted" />
-          <p className="text-xs text-muted-foreground italic">You're almost there, beauty! Next reward: Signature Lash Cleanser Kit.</p>
+          <p className="text-xs text-muted-foreground italic">You're glowing! Next unlock: VIP Priority Booking status.</p>
         </div>
       </CardContent>
     </Card>

@@ -1,12 +1,11 @@
-
 import type {Metadata} from 'next';
 import './globals.css';
 import {SidebarProvider} from '@/components/ui/sidebar';
 import {Toaster} from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'WinkLuxe Rewards | Wink At Riah',
-  description: 'Luxury lash rewards and appointment booking.',
+  title: 'Wink At Riah Rewards | Luxury Lash Loyalty',
+  description: 'Exclusive rewards and luxury lash services at Wink At Riah.',
 };
 
 export default function RootLayout({

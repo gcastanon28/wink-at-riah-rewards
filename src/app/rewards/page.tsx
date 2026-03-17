@@ -1,4 +1,3 @@
-
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarInset } from "@/components/ui/sidebar"
 import { RewardsCatalog } from "@/components/rewards-catalog"
@@ -15,11 +14,11 @@ export default function RewardsPage() {
             <div>
               <div className="flex items-center gap-2 text-primary font-bold mb-2 uppercase tracking-widest text-xs">
                 <Gift className="h-4 w-4" />
-                Loyalty Benefits
+                Member Privileges
               </div>
               <h1 className="text-4xl md:text-5xl font-headline font-bold">Rewards Catalog</h1>
               <p className="text-muted-foreground mt-2 max-w-xl">
-                Redeem your hard-earned sparkle points for luxury products and exclusive services at Wink At Riah.
+                Redeem your loyalty points for bespoke beauty treatments and exclusive services at Wink At Riah.
               </p>
             </div>
             <div className="bg-card px-6 py-4 rounded-2xl border border-border/50 shadow-lg flex items-center gap-4">
@@ -27,7 +26,7 @@ export default function RewardsPage() {
                 <Star className="h-6 w-6 text-primary fill-primary" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Available Balance</p>
+                <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Lash Point Balance</p>
                 <p className="text-2xl font-bold text-primary">{MOCK_USER.points} Points</p>
               </div>
             </div>
@@ -36,8 +35,8 @@ export default function RewardsPage() {
           <RewardsCatalog />
 
           <div className="bg-muted/20 border-2 border-dashed border-border rounded-3xl p-10 text-center space-y-4">
-            <h3 className="font-headline text-2xl font-bold">More coming soon...</h3>
-            <p className="text-muted-foreground max-w-sm mx-auto">We're constantly curating new luxury rewards for our most loyal clients. Check back often!</p>
+            <h3 className="font-headline text-2xl font-bold">Coming Soon...</h3>
+            <p className="text-muted-foreground max-w-sm mx-auto">We're curating more luxury rewards for our VIPs. Stay tuned for seasonal exclusives!</p>
           </div>
         </div>
       </SidebarInset>

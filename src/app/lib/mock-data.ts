@@ -12,16 +12,16 @@ export interface UserProfile {
   email: string;
   points: number;
   nextRewardPoints: number;
-  tier: 'Gold' | 'Diamond' | 'Platinum';
+  tier: string;
   serviceHistory: ServiceRecord[];
 }
 
 export const MOCK_USER: UserProfile = {
   name: "Ariah Jenkins",
-  email: "ariah@winkluxe.com",
+  email: "ariah@winkatriah.com",
   points: 450,
   nextRewardPoints: 500,
-  tier: "Diamond",
+  tier: "Lash VIP",
   serviceHistory: [
     {
       serviceName: "Full Volume Set",
@@ -66,31 +66,31 @@ export interface RewardItem {
 
 export const MOCK_REWARDS: RewardItem[] = [
   {
-    id: "1",
-    title: "Luxury Silk Eye Mask",
-    points: 200,
-    description: "Protect your extensions while you sleep with our signature silk mask.",
-    imageUrl: PlaceHolderImages.find(img => img.id === "reward-1")?.imageUrl || "https://picsum.photos/seed/mask/400/300"
+    id: "reward-1",
+    title: "Free Lash Bath",
+    points: 150,
+    description: "Deep cleaning treatment to keep your extensions fresh and healthy.",
+    imageUrl: PlaceHolderImages.find(img => img.id === "reward-bath")?.imageUrl || "https://picsum.photos/seed/bath/400/300"
   },
   {
-    id: "2",
-    title: "Signature Growth Serum",
-    points: 350,
-    description: "Keep your natural lashes strong and healthy between sets.",
-    imageUrl: PlaceHolderImages.find(img => img.id === "reward-2")?.imageUrl || "https://picsum.photos/seed/serum/400/300"
+    id: "reward-2",
+    title: "$10 Off Fill",
+    points: 300,
+    description: "Apply a credit to your next maintenance appointment.",
+    imageUrl: PlaceHolderImages.find(img => img.id === "reward-fill")?.imageUrl || "https://picsum.photos/seed/discount/400/300"
   },
   {
-    id: "3",
-    title: "Complementary Lash Bath",
-    points: 100,
-    description: "Deep cleaning treatment for your next appointment.",
-    imageUrl: PlaceHolderImages.find(img => img.id === "reward-3")?.imageUrl || "https://picsum.photos/seed/lash1/400/300"
+    id: "reward-3",
+    title: "Birthday Bonus",
+    points: 400,
+    description: "A special treat for your special day. Surprise gift included!",
+    imageUrl: PlaceHolderImages.find(img => img.id === "reward-birthday")?.imageUrl || "https://picsum.photos/seed/gift/400/300"
   },
   {
-    id: "4",
-    title: "$20 Service Credit",
+    id: "reward-4",
+    title: "VIP Priority Booking",
     points: 500,
-    description: "Applicable to any full set or fill service.",
-    imageUrl: PlaceHolderImages.find(img => img.id === "reward-4")?.imageUrl || "https://picsum.photos/seed/cleanser/400/300"
+    description: "Skip the waitlist and get first access to peak appointment slots.",
+    imageUrl: PlaceHolderImages.find(img => img.id === "reward-vip")?.imageUrl || "https://picsum.photos/seed/calendar/400/300"
   }
 ];

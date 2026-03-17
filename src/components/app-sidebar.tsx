@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -9,8 +8,6 @@ import {
   User,
   Star,
   Sparkles,
-  CalendarDays,
-  Menu,
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -70,14 +67,14 @@ export function AppSidebar() {
             <Sparkles className="h-6 w-6" />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="font-headline text-lg font-bold tracking-tight text-primary">WinkLuxe</span>
-            <span className="text-xs text-muted-foreground uppercase tracking-widest font-semibold">Rewards</span>
+            <span className="font-headline text-lg font-bold tracking-tight text-primary">Wink At Riah</span>
+            <span className="text-xs text-muted-foreground uppercase tracking-widest font-semibold text-accent">Rewards</span>
           </div>
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="px-4 text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Main Menu</SidebarGroupLabel>
+          <SidebarGroupLabel className="px-4 text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Member Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
@@ -108,7 +105,7 @@ export function AppSidebar() {
           </Avatar>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden overflow-hidden">
             <span className="text-sm font-semibold truncate">{MOCK_USER.name}</span>
-            <span className="text-xs text-muted-foreground truncate">{MOCK_USER.tier} Tier</span>
+            <span className="text-xs text-primary font-bold truncate tracking-wide">{MOCK_USER.tier}</span>
           </div>
         </Link>
       </SidebarFooter>
