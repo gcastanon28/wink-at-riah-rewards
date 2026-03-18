@@ -10,9 +10,6 @@ import { MOCK_REWARDS } from "@/app/lib/mock-data"
 import { useEffect, useState} from "react"
 import { doc, collection, runTransaction, serverTimestamp } from "firebase/firestore"
 
-export function AiLashTips() {
-}
-
 export function RewardsCatalog({
   featuredOnly = false,
   clientData,
@@ -32,7 +29,7 @@ export function RewardsCatalog({
     }, [clientData?.points])
 
     const handleRedeem = async (reward: any) => {
-      const clientId = "rJU09IkgTVL06hXTWxLQ"
+      const clientId = "rJU09IkgTVlO6hXTWxLQ"
     
       try {
         const clientRef = doc(db, "clients", clientId)
