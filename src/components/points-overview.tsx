@@ -3,6 +3,42 @@
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Star, TrendingUp } from "lucide-react"
+import { useEffect, useState } from "react"
+
+function AnimatedCounter({
+  value,
+  duration = 1200,
+}: {
+  value: number
+  duration?: number
+}) {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    let start = 0
+    const end = value
+    if (start === end) return
+
+    const incrementTime = 16
+    const totalSteps = Math.ceil(duration / incrementTime)
+    const stepValue = end / totalSteps
+
+    const timer = setInterval(() => {
+      start += stepValue
+
+      if (start >= end) {
+        setCount(end)
+        clearInterval(timer)
+      } else {
+        setCount(Math.floor(start))
+      }
+    }, incrementTime)
+
+    return () => clearInterval(timer)
+  }, [value, duration])
+
+  return <>{count}</>
+}
 
 export function PointsOverview({ clientData }: any) {
   const points = clientData?.points ?? 0;
@@ -27,9 +63,11 @@ export function PointsOverview({ clientData }: any) {
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex items-baseline gap-2">
-          <span className="text-5xl font-bold text-primary font-headline">{points}</span>
-          <span className="text-lg text-muted-foreground font-semibold uppercase tracking-widest">Points</span>
+        <div className="flex items-end gap-3">
+          <span className="text-5xl font-bold text-primary font-headline drop-shadow-[0_0_18px_rgba(236,72,153,0.25)]">
+            <AnimatedCounter value={points} />
+          </span>
+          <span className="text-lg text-white/70 font-semibold uppercase tracking-widest">Points</span>
         </div>
         
         <div className="space-y-3">

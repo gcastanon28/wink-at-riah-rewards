@@ -58,27 +58,27 @@ export const MOCK_REWARDS: RewardItem[] = [
     title: "Birthday Bonus",
     points: 50,
     description: "A special treat for your special day. Surprise gift included!",
-    imageUrl: PlaceHolderImages.find(img => img.id === "reward-birthday")?.imageUrl || "https://picsum.photos/seed/gift/400/300"
+    imageUrl: "/rewards/birthday.jpg"
   },
   {
     id: "reward-bath",
     title: "Free Lash Bath",
     points: 75,
     description: "Deep cleaning treatment to keep your extensions fresh and healthy.",
-    imageUrl: PlaceHolderImages.find(img => img.id === "reward-bath")?.imageUrl || "https://picsum.photos/seed/bath/400/300"
+    imageUrl: "/rewards/lash-bath.jpg"
   },
   {
     id: "reward-fill",
     title: "$10 Off Fill",
     points: 100,
     description: "Apply a credit to your next maintenance appointment.",
-    imageUrl: PlaceHolderImages.find(img => img.id === "reward-fill")?.imageUrl || "https://picsum.photos/seed/discount/400/300"
+    imageUrl: "/rewards/fill.jpg"
   },
   {
     id: "reward-vip",
     title: "VIP Priority Booking",
     points: 150,
     description: "Skip the waitlist and get first access to peak appointment slots.",
-    imageUrl: PlaceHolderImages.find(img => img.id === "reward-vip")?.imageUrl || "https://picsum.photos/seed/calendar/400/300"
+    imageUrl: "/rewards/vip.jpg"
   }
 ];

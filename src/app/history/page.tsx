@@ -3,6 +3,7 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarInset } from "@/components/ui/sidebar"
 import { VisitHistory } from "@/components/visit-history"
 import { History, TrendingUp, Sparkles } from "lucide-react"
+import { RedeemHistory } from "@/components/redeem-history"
 
 export default function HistoryPage() {
   return (
@@ -46,6 +47,7 @@ export default function HistoryPage() {
           </div>
 
           <VisitHistory />
+          <RedeemHistory />
         </div>
       </SidebarInset>
     </div>

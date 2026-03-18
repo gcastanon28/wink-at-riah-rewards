@@ -1,7 +1,5 @@
 import type {Metadata} from 'next';
 import './globals.css';
-import {SidebarProvider} from '@/components/ui/sidebar';
-import {Toaster} from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: 'Wink At Riah Rewards | Luxury Lash Loyalty',
@@ -21,10 +19,6 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased bg-background">
-        <SidebarProvider defaultOpen={true}>
-          {children}
-        </SidebarProvider>
-        <Toaster />
       </body>
     </html>
   );

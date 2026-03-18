@@ -6,7 +6,7 @@ import { RewardsCatalog } from "@/components/rewards-catalog"
 import { Gift, Star } from "lucide-react"
 import { useEffect, useState } from "react"
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/app/lib/firebase";
+import { db } from "@/app/firebase";
 
 export default function RewardsPage() {
   const [clientData, setClientData] = useState<any>(null);
@@ -50,6 +50,19 @@ useEffect(() => {
               </div>
             </div>
           </header>
+
+          <div className="bg-card border border-border/50 rounded-2xl p-4 mb-6 text-center">
+            <p className="text-sm text-muted-foreground">
+              Earn rewards with every visit to Wink At Riah ✨
+            </p>
+
+            <p className="text-lg font-semibold text-primary mt-1">
+              1 Appointment = +5 Points
+              Prebooking next fill = +5 Points
+              Birthday month = +10 Points
+              Leaving a review = +2-3 Points
+            </p>
+          </div>
 
           <RewardsCatalog />
 

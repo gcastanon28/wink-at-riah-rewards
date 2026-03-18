@@ -10,7 +10,7 @@ import { Calendar, ChevronRight, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/app/lib/firebase";
+import { db } from "@/app/firebase";
 
 export default function Dashboard() {
   const [clientData, setClientData] = useState<any>(null);
@@ -29,39 +29,33 @@ export default function Dashboard() {
   }, []);
 
   return (
-
     <div className="flex min-h-screen bg-background">
       <AppSidebar />
-      <SidebarInset className="flex-1 p-6 md:p-10 lg:p-12 overflow-y-auto">
-        <div className="max-w-7xl mx-auto space-y-12">
+      <SidebarInset className="flex-1 overflow-y-auto">
           {/* Header Section */}
           {/* Mobile Logo Header */}
-          <div className="md:hidden mb-8 rounded-3xl border border-pink-500/20 bg-white px-5 py-5 shadow-[0_0_35px_rgba(236,72,153,0.22)]">
-            <div className="flex items-center gap-4">
-            <img
-              src="/logo.png"
-              alt="Wink At Riah Logo"
-              className="h-24 w-24 rounded-2xl object-contain bg-white"
-            />
-            </div>
+          <header className="w-full overflow-hidden md:hidden">
+              <img
+                src="/logo-full.png"
+                alt="Wink At Riah Logo"
+                className="block w-full h-44 object-cover object-[50%_49.5%]"
+              />
+          </header>
 
-            <div>
-              <p className="text-2xl font-bold text-pink-500 leading-tight">Wink At Riah</p>
-              <p className="text-sm text-neautral-600 leading-tight">Lash Rewards</p>
-            </div>
-          </div>
+          <div className="p-6 md:p-10 lg:p-12">
+            <div className="space-y-12">
+              <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                  <h1 className="text-4xl md:text-5xl font-headline font-bold mb-2">
+                    Welcome back, {clientData?.name ?? "beautiful"}.
+                  </h1>
 
-<header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-  <div>
-    <h1 className="text-4xl md:text-5xl font-headline font-bold mb-2">
-      Welcome back, {clientData?.name ?? "beautiful"}.
-    </h1>
-
-    <p className="text-muted-foreground font-medium flex items-center gap-2 italic">
-      Ready for your next glow up at Wink At Riah?
-      <Sparkles className="h-4 w-4 text-primary" />
-    </p>
-  </div>
+                  <p className="text-muted-foreground font-medium flex items-center gap-2 italic">
+                    Ready for your next glow up at Wink At Riah?
+                    <Sparkles className="h-4 w-4 text-primary" />
+                  </p>
+                </div>
+              </header>
 
   <a
     href="https://winkatriah.glossgenius.com/"
@@ -74,7 +68,6 @@ export default function Dashboard() {
       <ChevronRight className="ml-2 h-4 w-4" />
     </Button>
   </a>
-</header>
           {/* Main Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Left Column - Stats & History */}
@@ -104,11 +97,12 @@ export default function Dashboard() {
                 <Button className="w-full bg-white text-primary hover:bg-white/90 font-bold rounded-xl h-12 relative z-10">
                   Get My Link
                 </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+                </div> {/* promo card */}
+              </div>   {/* right column */}
+            </div>     {/* main grid */}
+          </div>       {/* space-y-12 */}
+        </div>         {/* padding wrapper */}
       </SidebarInset>
     </div>
-  )
-}
+  );
+  }

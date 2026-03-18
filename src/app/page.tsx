@@ -1,6 +1,7 @@
-
-import { redirect } from "next/navigation"
-
 export default function Home() {
-  redirect("/dashboard")
+  return (
+    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      Home Page Working
+    </div>
+  )
 }
