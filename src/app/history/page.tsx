@@ -1,55 +1,106 @@
+"use client";
 
-import { AppSidebar } from "@/components/app-sidebar"
-import { SidebarInset } from "@/components/ui/sidebar"
-import { VisitHistory } from "@/components/visit-history"
-import { History, TrendingUp, Sparkles } from "lucide-react"
-import { RedeemHistory } from "@/components/redeem-history"
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarInset } from "@/components/ui/sidebar";
+import { useClientData } from "@/hooks/use-client-data";
+
+function formatDate(createdAt: any) {
+  if (!createdAt) return "—";
+  if (typeof createdAt?.toDate === "function") {
+    return createdAt.toDate().toLocaleDateString();
+  }
+  return "—";
+}
 
 export default function HistoryPage() {
+  const { clientData, redemptions, loading } = useClientData();
+
   return (
     <div className="flex min-h-screen bg-background">
       <AppSidebar />
       <SidebarInset className="flex-1 p-6 md:p-10 lg:p-12 overflow-y-auto">
-        <div className="max-w-4xl mx-auto space-y-12">
+        <div className="max-w-5xl mx-auto space-y-10">
           <header>
-            <div className="flex items-center gap-2 text-primary font-bold mb-2 uppercase tracking-widest text-xs">
-              <History className="h-4 w-4" />
+            <p className="text-primary font-bold uppercase tracking-widest text-sm mb-2">
               Your Records
-            </div>
-            <h1 className="text-4xl md:text-5xl font-headline font-bold">Visit History</h1>
+            </p>
+            <h1 className="text-4xl md:text-5xl font-headline font-bold">
+              Redemption History
+            </h1>
             <p className="text-muted-foreground mt-2">
-              Review your past services, notes, and point earnings.
+              Review your redeemed rewards and loyalty activity.
             </p>
           </header>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-card p-6 rounded-2xl border border-border/50 shadow-md flex flex-col items-center text-center gap-2">
-              <div className="p-3 bg-primary/10 rounded-full mb-2">
-                <TrendingUp className="h-6 w-6 text-primary" />
-              </div>
-              <span className="text-3xl font-bold">12</span>
-              <span className="text-xs font-bold uppercase text-muted-foreground tracking-widest">Total Visits</span>
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-card rounded-3xl border border-border/50 p-6 text-center">
+              <p className="text-sm text-muted-foreground uppercase tracking-widest">
+                Current Points
+              </p>
+              <p className="text-4xl font-bold text-primary mt-2">
+                {loading ? "..." : clientData.points}
+              </p>
             </div>
-            <div className="bg-card p-6 rounded-2xl border border-border/50 shadow-md flex flex-col items-center text-center gap-2">
-              <div className="p-3 bg-primary/10 rounded-full mb-2">
-                <Sparkles className="h-6 w-6 text-primary" />
-              </div>
-              <span className="text-3xl font-bold">850</span>
-              <span className="text-xs font-bold uppercase text-muted-foreground tracking-widest">Lifetime Points</span>
-            </div>
-            <div className="bg-card p-6 rounded-2xl border border-border/50 shadow-md flex flex-col items-center text-center gap-2">
-              <div className="p-3 bg-primary/10 rounded-full mb-2">
-                <History className="h-6 w-6 text-primary" />
-              </div>
-              <span className="text-3xl font-bold">Feb 24</span>
-              <span className="text-xs font-bold uppercase text-muted-foreground tracking-widest">Last Visit</span>
-            </div>
-          </div>
 
-          <VisitHistory />
-          <RedeemHistory />
+            <div className="bg-card rounded-3xl border border-border/50 p-6 text-center">
+              <p className="text-sm text-muted-foreground uppercase tracking-widest">
+                Membership Tier
+              </p>
+              <p className="text-2xl font-bold text-primary mt-2">
+                {loading ? "Loading..." : clientData.tier}
+              </p>
+            </div>
+
+            <div className="bg-card rounded-3xl border border-border/50 p-6 text-center">
+              <p className="text-sm text-muted-foreground uppercase tracking-widest">
+                Total Redemptions
+              </p>
+              <p className="text-4xl font-bold text-primary mt-2">
+                {loading ? "..." : redemptions.length}
+              </p>
+            </div>
+          </section>
+
+          <section className="bg-card rounded-3xl border border-border/50 overflow-hidden">
+            <div className="p-6 border-b border-border/50">
+              <h2 className="text-2xl font-headline font-bold">
+                Your Reward Activity
+              </h2>
+              <p className="text-muted-foreground mt-1">
+                Live data from your reward redemptions.
+              </p>
+            </div>
+
+            <div className="divide-y divide-border/50">
+              {redemptions.length === 0 ? (
+                <div className="p-6 text-muted-foreground">
+                  No redemptions yet.
+                </div>
+              ) : (
+                redemptions.map((item) => (
+                  <div
+                    key={item.id}
+                    className="p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+                  >
+                    <div>
+                      <p className="font-bold text-lg">{item.rewardTitle}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Redeemed on {formatDate(item.createdAt)}
+                      </p>
+                    </div>
+
+                    <div className="text-right">
+                      <p className="text-primary font-bold text-xl">
+                        -{item.pointsUsed} pts
+                      </p>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
         </div>
       </SidebarInset>
     </div>
-  )
+  );
 }

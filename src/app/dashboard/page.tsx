@@ -1,108 +1,120 @@
 "use client";
 
-import { AppSidebar } from "@/components/app-sidebar"
-import { SidebarInset } from "@/components/ui/sidebar"
-import { PointsOverview } from "@/components/points-overview"
-import { AiLashTips } from "@/components/ai-lash-tips"
-import { RewardsCatalog } from "@/components/rewards-catalog"
-import { Button } from "@/components/ui/button"
-import { Calendar, ChevronRight, Sparkles } from "lucide-react"
-import Link from "next/link"
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarInset } from "@/components/ui/sidebar";
+import { PointsOverview } from "@/components/points-overview";
+import { AiLashTips } from "@/components/ai-lash-tips";
+import { RewardsCatalog } from "@/components/rewards-catalog";
+import { Button } from "@/components/ui/button";
+import { Calendar, ChevronRight, Sparkles } from "lucide-react";
+import Link from "next/link";
 import { db } from "@/app/firebase";
+import { collection, getDocs } from "firebase/firestore";
+import { useClientData } from "@/hooks/use-client-data";
+
+type ClientData = {
+  id: string;
+  name: string;
+  points: number;
+  tier: string;
+  nextReward?: number;
+  email?: string;
+};
+
+type Reward = {
+  id: string;
+  title: string;
+  description: string;
+  pointsRequired: number;
+  active: boolean;
+};
 
 export default function Dashboard() {
-  const [clientData, setClientData] = useState<any>(null);
-
-  useEffect(() => {
-    const fetchClientData = async () => {
-      const clientId = "rJU09IkgTVlO6hXTWxLQ";
-      const clientRef = doc(db, "clients", clientId);
-      const clientSnap = await getDoc(clientRef);
-
-      if (clientSnap.exists()) {
-        setClientData(clientSnap.data());
-      }
-    };
-    fetchClientData();
-  }, []);
+ 
+  const { clientData, rewards, loading } = useClientData();
 
   return (
     <div className="flex min-h-screen bg-background">
       <AppSidebar />
       <SidebarInset className="flex-1 overflow-y-auto">
-          {/* Header Section */}
-          {/* Mobile Logo Header */}
-          <header className="w-full overflow-hidden md:hidden">
-              <img
-                src="/logo-full.png"
-                alt="Wink At Riah Logo"
-                className="block w-full h-44 object-cover object-[50%_49.5%]"
-              />
-          </header>
+        {/* Header Section */}
+        {/* Mobile Logo Header */}
+        <header className="w-full overflow-hidden md:hidden">
+          <img
+            src="/logo-full.png"
+            alt="Wink At Riah Logo"
+            className="block w-full h-44 object-cover object-[50%_49.5%]"
+          />
+        </header>
 
-          <div className="p-6 md:p-10 lg:p-12">
-            <div className="space-y-12">
-              <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                  <h1 className="text-4xl md:text-5xl font-headline font-bold mb-2">
-                    Welcome back, {clientData?.name ?? "beautiful"}.
-                  </h1>
+        <div className="p-4 md:p-8 space-y-8">
+          {/* Welcome / Hero */}
+          <section className="space-y-4">
+            <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-white">
+              Welcome back,
+              <br />
+              beautiful✨
+            </h1>
 
-                  <p className="text-muted-foreground font-medium flex items-center gap-2 italic">
-                    Ready for your next glow up at Wink At Riah?
-                    <Sparkles className="h-4 w-4 text-primary" />
-                  </p>
-                </div>
-              </header>
+            <p className="text-lg md:text-xl text-muted-foreground italic">
+              Ready for your next glow up at Wink At Riah? <Sparkles className="inline h-5 w-5 text-primary" />
+            </p>
 
-  <a
-    href="https://winkatriah.glossgenius.com/"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    <Button size="lg" className="bg-primary hover:bg-primary/90 text-white">
-      <Calendar className="mr-2 h-5 w-5" />
-      Book Now
-      <ChevronRight className="ml-2 h-4 w-4" />
-    </Button>
-  </a>
-          {/* Main Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Left Column - Stats & History */}
-            <div className="lg:col-span-8 space-y-8">
-              <PointsOverview clientData={clientData} />
-              
-              <section className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-headline font-bold">VIP Rewards</h2>
-                  <Link href="/rewards" className="text-primary text-sm font-bold flex items-center hover:underline">
-                    View Catalog
-                    <ChevronRight className="h-4 w-4" />
-                  </Link>
-                </div>
-                <RewardsCatalog featuredOnly={true} />
-              </section>
+            <a
+  href="https://winkatriah.glossgenius.com/"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <Button className="rounded-2xl px-8 py-6 text-lg">
+    <Calendar className="mr-2 h-5 w-5" />
+    Book Now
+    <ChevronRight className="ml-2 h-5 w-5" />
+  </Button>
+</a>
+
+          </section>
+
+          {/* Points Overview */}
+          <PointsOverview clientData={clientData} loading={loading} />
+
+          {/* VIP Rewards */}
+          <section className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-4xl font-bold text-white">VIP Rewards</h2>
+              <Link
+                href="/rewards"
+                className="text-primary text-2xl font-semibold hover:opacity-80 transition"
+              >
+                View Catalog <ChevronRight className="inline h-6 w-6" />
+              </Link>
             </div>
 
-            {/* Right Column - AI & Actions */}
-            <div className="lg:col-span-4 space-y-8">
-              <AiLashTips />
-              
-              <div className="bg-primary rounded-3xl p-8 text-white relative overflow-hidden shadow-2xl shadow-primary/20">
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
-                <h3 className="font-headline text-2xl font-bold mb-4 relative z-10">Refer a Bestie</h3>
-                <p className="text-white/80 text-sm mb-6 leading-relaxed relative z-10">Gift them $10 off their first full set and earn 100 bonus points for your loyalty.</p>
-                <Button className="w-full bg-white text-primary hover:bg-white/90 font-bold rounded-xl h-12 relative z-10">
-                  Get My Link
-                </Button>
-                </div> {/* promo card */}
-              </div>   {/* right column */}
-            </div>     {/* main grid */}
-          </div>       {/* space-y-12 */}
-        </div>         {/* padding wrapper */}
+            <RewardsCatalog
+              userPoints={clientData.points}
+              rewards={rewards}
+              clientId={clientData.id}
+            />
+          </section>
+
+          {/* AI Lash Tips */}
+          <AiLashTips />
+
+          {/* Referral */}
+          <section className="rounded-[2rem] bg-primary p-8 text-primary-foreground shadow-xl">
+            <h3 className="text-4xl font-bold mb-4">Refer a Bestie</h3>
+            <p className="text-2xl leading-relaxed mb-8">
+              Gift them $10 off their first full set and earn 100 bonus points for your loyalty.
+            </p>
+            <Button
+              variant="secondary"
+              className="w-full rounded-2xl py-7 text-2xl font-bold"
+            >
+              Get My Link
+            </Button>
+          </section>
+        </div>
       </SidebarInset>
     </div>
   );
-  }
+}
