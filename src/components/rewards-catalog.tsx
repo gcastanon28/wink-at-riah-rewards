@@ -1,8 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { db } from "@/app/firebase";
-import { addDoc, collection, doc, Timestamp, updateDoc } from "firebase/firestore";
+import { useEffect, useMemo, useState } from "react";
+import {
+  createRedemption,
+  updateProfilePoints,
+} from "@/app/lib/supabase";
 import { Button } from "@/components/ui/button";
 
 type Reward = {
@@ -11,6 +13,7 @@ type Reward = {
   description: string;
   pointsRequired: number;
   active: boolean;
+  image_url?: string;
 };
 
 type RewardsCatalogProps = {
@@ -28,19 +31,19 @@ const rewardVisuals: Record<
 > = {
   "Birthday Bonus": {
     image: "/rewards/birthday.jpg",
-    fallback: "/rewards/logo-full.png",
+    fallback: "/logo-full.png",
   },
   "Free Lash Bath": {
     image: "/rewards/lash-bath.jpg",
-    fallback: "/rewards/logo-full.png",
+    fallback: "/logo-full.png",
   },
   "$10 Off Fill": {
     image: "/rewards/fill.jpg",
-    fallback: "/rewards/logo-full.png",
+    fallback: "/logo-full.png",
   },
   "VIP Priority Booking": {
     image: "/rewards/vip.jpg",
-    fallback: "/rewards/logo-full.png",
+    fallback: "/logo-full.png",
   },
 };
 
@@ -52,25 +55,16 @@ export function RewardsCatalog({
   const [currentPoints, setCurrentPoints] = useState(userPoints);
   const [redeemingId, setRedeemingId] = useState<string | null>(null);
 
+  useEffect(() => {
+    setCurrentPoints(userPoints);
+  }, [userPoints]);
+
   const mergedRewards = useMemo(() => {
     const activeRewards = rewards.filter((reward) => reward.active);
 
-    const hasVip = activeRewards.some(
-      (reward) => reward.title === "VIP Priority Booking"
+    return activeRewards.sort(
+      (a, b) => a.pointsRequired - b.pointsRequired
     );
-
-    if (!hasVip) {
-      activeRewards.push({
-        id: "vip-priority-booking-static",
-        title: "VIP Priority Booking",
-        description:
-          "Skip the waitlist and get first access to peak appointment slots.",
-        pointsRequired: 150,
-        active: true,
-      });
-    }
-
-    return activeRewards.sort((a, b) => a.pointsRequired - b.pointsRequired);
   }, [rewards]);
 
   const handleRedeem = async (reward: Reward) => {
@@ -89,15 +83,14 @@ export function RewardsCatalog({
 
       const newPoints = currentPoints - reward.pointsRequired;
 
-      await updateDoc(doc(db, "clients", clientId), {
-        points: newPoints,
-      });
+      await updateProfilePoints(clientId, newPoints);
 
-      await addDoc(collection(db, "redemptions"), {
-        userId: clientId,
-        rewardTitle: reward.title,
-        pointsUsed: reward.pointsRequired,
-        createdAt: Timestamp.now(),
+      await createRedemption({
+        user_id: clientId,
+        reward_title: reward.title,
+        points_used: reward.pointsRequired,
+        points_before: currentPoints,
+        points_after: newPoints,
       });
 
       setCurrentPoints(newPoints);
@@ -121,56 +114,57 @@ export function RewardsCatalog({
   return (
     <div className="space-y-6">
       {mergedRewards.map((reward) => {
-        const canRedeem = currentPoints >= reward.pointsRequired;
         const visual = rewardVisuals[reward.title] || {
-          image: "/rewards/logo-full.png",
-          fallback: "/rewards/logo-full.png",
+          image: reward.image_url || "/logo-full.png",
+          fallback: "/logo-full.png",
         };
+
+        const locked = currentPoints < reward.pointsRequired;
 
         return (
           <div
             key={reward.id}
-            className="overflow-hidden rounded-2xl bg-card border border-white/10"
+            className="overflow-hidden rounded-[2rem] border border-white/10 bg-card text-white shadow-xl"
           >
-            <div className="relative h-32 w-full overflow-hidden bg-black">
+            <div className="relative h-48 w-full overflow-hidden">
               <img
-                src={visual.image}
+                src={reward.image_url || visual.image}
                 alt={reward.title}
                 className="h-full w-full object-cover"
                 onError={(e) => {
-                  const target = e.currentTarget;
-                  if (!target.src.includes(visual.fallback)) {
-                    target.src = visual.fallback;
-                  }
+                  e.currentTarget.src = visual.fallback;
                 }}
               />
 
-              <div className="absolute inset-0 bg-black/20" />
-
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="rounded-full border border-white/40 bg-white/10 p-5 backdrop-blur-sm">
-                  <span className="text-4xl text-white">🔒</span>
+              {locked && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+                  <div className="rounded-full bg-white/20 backdrop-blur-md border border-white/30 px-6 py-6 text-4xl">
+                    🔒
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
-            <div className="p-5 space-y-3">
-              <h3 className="text-2xl font-bold text-white">{reward.title}</h3>
-
-              <p className="text-base text-muted-foreground">
-                {reward.description}
-              </p>
+            <div className="space-y-4 p-6">
+              <div>
+                <h3 className="text-2xl font-headline font-bold">
+                  {reward.title}
+                </h3>
+                <p className="mt-2 text-white/70 text-lg">
+                  {reward.description}
+                </p>
+              </div>
 
               <Button
                 onClick={() => handleRedeem(reward)}
-                disabled={!canRedeem || redeemingId === reward.id}
-                className="w-full rounded-2xl py-7 text-2xl font-bold"
+                disabled={locked || redeemingId === reward.id}
+                className="w-full rounded-2xl py-7 text-xl font-bold"
               >
                 {redeemingId === reward.id
                   ? "Redeeming..."
-                  : canRedeem
-                  ? `Redeem for ${reward.pointsRequired} pts`
-                  : `Need ${reward.pointsRequired} pts`}
+                  : locked
+                  ? `Need ${reward.pointsRequired} pts`
+                  : `Redeem for ${reward.pointsRequired} pts`}
               </Button>
             </div>
           </div>

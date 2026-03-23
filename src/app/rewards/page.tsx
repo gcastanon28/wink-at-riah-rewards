@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { RewardsCatalog } from "@/components/rewards-catalog";
-import { db } from "@/app/firebase";
-import { collection, getDocs } from "firebase/firestore";
 import { useClientData } from "@/hooks/use-client-data";
 
 type ClientData = {
@@ -23,6 +21,7 @@ type Reward = {
   description: string;
   pointsRequired: number;
   active: boolean;
+  image_url?: string;
 };
 
 export default function RewardsPage() {

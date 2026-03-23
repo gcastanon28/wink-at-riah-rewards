@@ -1,9 +1,12 @@
-
 "use client";
 
-import { useMemo } from "react";
-import { collection, query, where, orderBy, limit } from "firebase/firestore";
-import { useFirestore, useCollection, useUser } from "@/firebase";
+import { useEffect, useState } from "react";
+import { useUser } from "@/firebase";
+import {
+  getRewards,
+  getProfileByEmail,
+  getRedemptionsByUserId,
+} from "@/app/lib/supabase";
 
 export type ClientData = {
   id: string;
@@ -20,6 +23,7 @@ export type Reward = {
   description: string;
   pointsRequired: number;
   active: boolean;
+  image_url?: string;
 };
 
 export type Redemption = {
@@ -31,50 +35,82 @@ export type Redemption = {
 };
 
 export function useClientData() {
-  const db = useFirestore();
   const { user } = useUser();
 
-  // Stable collection references
-  const clientsQuery = useMemo(() => {
-    if (!user?.email) return null;
-    return query(collection(db, "clients"), where("email", "==", user.email), limit(1));
-  }, [db, user?.email]);
+  const [clientData, setClientData] = useState<ClientData>({
+    id: "",
+    name: "beautiful✨",
+    points: 0,
+    tier: "New Member",
+    nextReward: 150,
+    email: user?.email || "",
+  });
 
-  const rewardsQuery = useMemo(() => {
-    return query(collection(db, "rewards"), where("active", "==", true));
-  }, [db]);
+  const [rewards, setRewards] = useState<Reward[]>([]);
+  const [redemptions, setRedemptions] = useState<Redemption[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const redemptionsQuery = useMemo(() => {
-    if (!user?.uid) return null;
-    return query(
-      collection(db, "redemptions"),
-      where("userId", "==", user.uid),
-      orderBy("createdAt", "desc")
-    );
-  }, [db, user?.uid]);
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
 
-  const { data: clients, loading: loadingClients } = useCollection<ClientData>(clientsQuery);
-  const { data: rewards, loading: loadingRewards } = useCollection<Reward>(rewardsQuery);
-  const { data: redemptions, loading: loadingRedemptions } = useCollection<Redemption>(redemptionsQuery);
+        // Load profile by email
+        if (user?.email) {
+          const profile = await getProfileByEmail(user.email);
 
-  const clientData = useMemo(() => {
-    if (clients && clients.length > 0) {
-      return clients[0];
-    }
-    return {
-      id: "",
-      name: "beautiful✨",
-      points: 0,
-      tier: "New Member",
-      nextReward: 150,
-      email: user?.email || "",
+          if (profile) {
+            setClientData({
+              id: profile.id,
+              name: profile.full_name || "beautiful✨",
+              points: profile.points || 0,
+              tier: profile.tier || "New Member",
+              nextReward: 150,
+              email: profile.email || user.email,
+            });
+
+            const userRedemptions = await getRedemptionsByUserId(profile.id);
+            setRedemptions(userRedemptions || []);
+          } else {
+            setClientData({
+              id: "",
+              name: "beautiful✨",
+              points: 0,
+              tier: "New Member",
+              nextReward: 150,
+              email: user.email,
+            });
+            setRedemptions([]);
+          }
+        }
+
+        // Load rewards
+        const rewardsData = await getRewards();
+
+        const mappedRewards = (rewardsData || []).map((reward: any) => ({
+          id: reward.id,
+          title: reward.title,
+          description: reward.description,
+          pointsRequired: reward.points_cost,
+          active: reward.active,
+          image_url: reward.image_url,
+        }));
+
+        setRewards(mappedRewards);
+      } catch (error) {
+        console.error("Error loading client data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
-  }, [clients, user?.email]);
+
+    loadData();
+  }, [user?.email]);
 
   return {
     clientData,
     rewards,
     redemptions,
-    loading: loadingClients || loadingRewards || loadingRedemptions,
+    loading,
   };
 }

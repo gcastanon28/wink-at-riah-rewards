@@ -1,51 +1,51 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { collection, getDocs, orderBy, query } from "firebase/firestore"
-import { db } from "@/app/firebase"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEffect, useState } from "react";
+import { useUser } from "@/firebase";
+import { getProfileByEmail, getRedemptionsByUserId } from "@/app/lib/supabase";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Redemption = {
-  id: string
-  rewardTitle: string
-  cost: number
-  pointsBefore?: number
-  pointsAfter?: number
-  redeemedAt?: any
-}
+  id: string;
+  rewardTitle: string;
+  pointsUsed: number;
+  pointsBefore?: number;
+  pointsAfter?: number;
+  userId: string;
+  createdAt?: string;
+};
 
 export function RedeemHistory() {
-  const [redemptions, setRedemptions] = useState<Redemption[]>([])
-  const [loading, setLoading] = useState(true)
+  const { user } = useUser();
+  const [redemptions, setRedemptions] = useState<Redemption[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRedemptions = async () => {
       try {
-        const clientId = "rJU09IkgTVL06hXTWxLQ"
+        if (!user?.email) {
+          setRedemptions([]);
+          return;
+        }
 
-        const redemptionsRef = collection(db, "clients", clientId, "redemptions")
-        const redemptionsQuery = query(
-          redemptionsRef,
-          orderBy("redeemedAt", "desc")
-        )
+        const profile = await getProfileByEmail(user.email);
 
-        const snapshot = await getDocs(redemptionsQuery)
+        if (!profile?.id) {
+          setRedemptions([]);
+          return;
+        }
 
-        const items: Redemption[] = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Redemption[]
-
-        setRedemptions(items)
+        const items = await getRedemptionsByUserId(profile.id);
+        setRedemptions(items || []);
       } catch (error) {
-        console.error("Failed to load redemption history:", error)
+        console.error("Failed to load redemption history:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchRedemptions()
-  }, [])
+    fetchRedemptions();
+  }, [user?.email]);
 
   return (
     <Card className="border-none rounded-3xl bg-white/[0.04] backdrop-blur-md shadow-xl shadow-black/30">
@@ -60,9 +60,9 @@ export function RedeemHistory() {
           <p className="text-white/70">No rewards redeemed yet.</p>
         ) : (
           redemptions.map((item) => {
-            const redeemedDate = item.redeemedAt?.toDate
-              ? item.redeemedAt.toDate().toLocaleDateString()
-              : "Just now"
+            const redeemedDate = item.createdAt
+              ? new Date(item.createdAt).toLocaleDateString()
+              : "Just now";
 
             return (
               <div
@@ -80,7 +80,7 @@ export function RedeemHistory() {
                   </div>
 
                   <span className="rounded-full bg-pink-500 px-3 py-1 text-sm font-bold text-white">
-                    -{item.cost} pts
+                    -{item.pointsUsed} pts
                   </span>
                 </div>
 
@@ -89,10 +89,10 @@ export function RedeemHistory() {
                   <p>After: {item.pointsAfter ?? "--"} pts</p>
                 </div>
               </div>
-            )
+            );
           })
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
