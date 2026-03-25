@@ -61,20 +61,16 @@ export function RewardsCatalog({
 
   const mergedRewards = useMemo(() => {
     const activeRewards = rewards.filter((reward) => reward.active);
-
     return activeRewards.sort(
       (a, b) => a.pointsRequired - b.pointsRequired
     );
   }, [rewards]);
 
   const handleRedeem = async (reward: Reward) => {
-    if (!clientId) {
-      alert("No client found.");
-      return;
-    }
+    if (!clientId) return;
 
     if (currentPoints < reward.pointsRequired) {
-      alert("Not enough points for this reward.");
+      alert("Not enough points.");
       return;
     }
 
@@ -94,10 +90,11 @@ export function RewardsCatalog({
       });
 
       setCurrentPoints(newPoints);
+      alert("Reward redeemed successfully!");
       window.location.reload();
-    } catch (error) {
-      console.error("Redeem failed:", error);
-      alert("Something went wrong while redeeming.");
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong redeeming reward.");
     } finally {
       setRedeemingId(null);
     }
@@ -138,7 +135,7 @@ export function RewardsCatalog({
 
               {locked && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/10">
-                  <div className="rounded-full bg-white/20 backdrop-blur-md border border-white/30 px-6 py-6 text-4xl">
+                  <div className="rounded-full bg-white/20 px-6 py-6 backdrop-blur-md border border-white/30">
                     🔒
                   </div>
                 </div>
@@ -150,7 +147,7 @@ export function RewardsCatalog({
                 <h3 className="text-2xl font-headline font-bold">
                   {reward.title}
                 </h3>
-                <p className="mt-2 text-white/70 text-lg">
+                <p className="mt-2 text-lg text-white/70">
                   {reward.description}
                 </p>
               </div>

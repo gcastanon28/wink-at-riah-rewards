@@ -9,8 +9,6 @@ import { RewardsCatalog } from "@/components/rewards-catalog";
 import { Button } from "@/components/ui/button";
 import { Calendar, ChevronRight, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { db } from "@/app/firebase";
-import { collection, getDocs } from "firebase/firestore";
 import { useClientData } from "@/hooks/use-client-data";
 
 type ClientData = {

@@ -1,11 +1,12 @@
-const SUPABASE_URL = "https://wbjtcxdtrmlitjcunvip.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndianRjeGR0cm1saXRqY3VudmlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNDI1NDMsImV4cCI6MjA4OTgxODU0M30.OY-3R6Yhs7pECP2qwwIx2LMAYLZAzvMm8o7QzwrRpi0";
+import { createClient } from "@supabase/supabase-js";
 
-const headers = {
-  apikey: SUPABASE_ANON_KEY,
-  Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-  "Content-Type": "application/json",
-};
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+export const supabase = createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
 type RewardRow = {
   id: string;
@@ -42,13 +43,16 @@ async function supabaseFetch(
   const res = await fetch(`${SUPABASE_URL}${path}`, {
     ...options,
     headers: {
-      ...headers,
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
       ...(options.headers || {}),
     },
   });
 
   if (!res.ok) {
-    throw new Error(`Supabase request failed: ${res.status}`);
+    const errorText = await res.text();
+    throw new Error(`Supabase request failed: ${res.status} ${errorText}`);
   }
 
   return res;
@@ -65,59 +69,41 @@ export async function getRewards(): Promise<RewardRow[]> {
   return res.json();
 }
 
-export async function getProfileById(id: string): Promise<ProfileRow | null> {
-  const res = await supabaseFetch(
-    `/rest/v1/profiles?id=eq.${id}&select=*`,
-    {
-      method: "GET",
-    }
-  );
-
-  const data: ProfileRow[] = await res.json();
-  return data[0] ?? null;
-}
-
 export async function getProfileByEmail(
   email: string
 ): Promise<ProfileRow | null> {
+  const encodedEmail = encodeURIComponent(email);
+
   const res = await supabaseFetch(
-    `/rest/v1/profiles?email=eq.${encodeURIComponent(email)}&select=*`,
+    `/rest/v1/profiles?select=*&email=eq.${encodedEmail}&limit=1`,
     {
       method: "GET",
     }
   );
 
   const data: ProfileRow[] = await res.json();
-  return data[0] ?? null;
+  return data[0] || null;
 }
 
-export async function getRedemptionsByUserId(userId: string) {
+export async function getRedemptionsByUserId(
+  userId: string
+): Promise<RedemptionRow[]> {
   const res = await supabaseFetch(
-    `/rest/v1/redemptions?user_id=eq.${userId}&select=*&order=created_at.desc`,
+    `/rest/v1/redemptions?select=*&user_id=eq.${userId}&order=created_at.desc`,
     {
       method: "GET",
     }
   );
 
-  const data: RedemptionRow[] = await res.json();
-
-  return (data || []).map((item) => ({
-    id: item.id,
-    rewardTitle: item.reward_title || "Reward",
-    pointsUsed: item.points_used || 0,
-    pointsBefore: item.points_before ?? undefined,
-    pointsAfter: item.points_after ?? undefined,
-    userId: item.user_id,
-    createdAt: item.created_at || undefined,
-  }));
+  return res.json();
 }
 
 export async function updateProfilePoints(
-  userId: string,
+  id: string,
   points: number
 ) {
   const res = await supabaseFetch(
-    `/rest/v1/profiles?id=eq.${userId}`,
+    `/rest/v1/profiles?id=eq.${id}`,
     {
       method: "PATCH",
       headers: {
@@ -130,50 +116,23 @@ export async function updateProfilePoints(
   return res.json();
 }
 
-export async function updateProfile(
-  userId: string,
-  updates: {
-    full_name?: string;
-    email?: string;
-    phone?: string;
-    tier?: string;
-  }
-) {
-  const res = await supabaseFetch(
-    `/rest/v1/profiles?id=eq.${userId}`,
-    {
-      method: "PATCH",
-      headers: {
-        Prefer: "return=representation",
-      },
-      body: JSON.stringify(updates),
-    }
-  );
-
-  const data = await res.json();
-  return data[0] ?? null;
-}
-
-export async function createRedemption(entry: {
+export async function createRedemption(data: {
   user_id: string;
   reward_title: string;
   points_used: number;
-  points_before?: number;
-  points_after?: number;
-  created_at?: string;
+  points_before: number;
+  points_after: number;
 }) {
-  const res = await supabaseFetch(`/rest/v1/redemptions`, {
-    method: "POST",
-    headers: {
-      Prefer: "return=representation",
-    },
-    body: JSON.stringify([
-      {
-        ...entry,
-        created_at: entry.created_at ?? new Date().toISOString(),
+  const res = await supabaseFetch(
+    `/rest/v1/redemptions`,
+    {
+      method: "POST",
+      headers: {
+        Prefer: "return=representation",
       },
-    ]),
-  });
+      body: JSON.stringify(data),
+    }
+  );
 
   return res.json();
 }
