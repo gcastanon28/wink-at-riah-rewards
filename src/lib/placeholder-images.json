@@ -1,0 +1,28 @@
+{
+  "placeholderImages": [
+    {
+      "id": "reward-1",
+      "description": "Luxury Eye Mask",
+      "imageUrl": "https://picsum.photos/seed/mask/400/300",
+      "imageHint": "silk eye mask beauty"
+    },
+    {
+      "id": "reward-2",
+      "description": "Lash Growth Serum",
+      "imageUrl": "https://picsum.photos/seed/serum/400/300",
+      "imageHint": "beauty serum bottle"
+    },
+    {
+      "id": "reward-3",
+      "description": "Full Volume Set",
+      "imageUrl": "https://picsum.photos/seed/lash1/400/300",
+      "imageHint": "eyelash extensions volume"
+    },
+    {
+      "id": "reward-4",
+      "description": "Lash Cleanser Kit",
+      "imageUrl": "https://picsum.photos/seed/cleanser/400/300",
+      "imageHint": "beauty cleanser foam"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+
+{
+  "entities": {
+    "Client": {
+      "title": "Client",
+      "description": "Information about a salon client and their loyalty status.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Full name of the client." },
+        "email": { "type": "string", "format": "email", "description": "Email address for login." },
+        "points": { "type": "number", "description": "Current loyalty point balance." },
+        "tier": { "type": "string", "enum": ["New Member", "Lash VIP", "Elite Member"], "description": "Current membership tier." },
+        "nextReward": { "type": "number", "description": "Points threshold for the next reward." }
+      },
+      "required": ["name", "email", "points", "tier"]
+    },
+    "Reward": {
+      "title": "Reward",
+      "description": "Available rewards in the loyalty catalog.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "Name of the reward." },
+        "description": { "type": "string", "description": "Details about the reward." },
+        "pointsRequired": { "type": "number", "description": "Points needed to redeem." },
+        "active": { "type": "boolean", "description": "Whether the reward is currently available." }
+      },
+      "required": ["title", "pointsRequired", "active"]
+    },
+    "Redemption": {
+      "title": "Redemption",
+      "description": "A record of a reward being claimed by a client.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The ID of the client who redeemed." },
+        "rewardTitle": { "type": "string", "description": "The title of the reward redeemed." },
+        "pointsUsed": { "type": "number", "description": "Points deducted for this redemption." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the redemption occurred." }
+      },
+      "required": ["userId", "rewardTitle", "pointsUsed", "createdAt"]
+    }
+  },
+  "auth": {
+    "providers": ["password", "google"]
+  },
+  "firestore": {
+    "/clients/{clientId}": {
+      "schema": "Client",
+      "description": "User profile and point balance."
+    },
+    "/rewards/{rewardId}": {
+      "schema": "Reward",
+      "description": "Catalog of redeemable beauty services."
+    },
+    "/redemptions/{redemptionId}": {
+      "schema": "Redemption",
+      "description": "Log of point usage."
+    }
+  }
+}

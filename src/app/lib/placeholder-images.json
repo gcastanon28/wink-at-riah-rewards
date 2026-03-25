@@ -1,0 +1,28 @@
+{
+  "placeholderImages": [
+    {
+      "id": "reward-fill",
+      "description": "$10 Off Fill",
+      "imageUrl": "https://picsum.photos/seed/discount/400/300",
+      "imageHint": "beauty discount coupon"
+    },
+    {
+      "id": "reward-bath",
+      "description": "Free Lash Bath",
+      "imageUrl": "https://picsum.photos/seed/bath/400/300",
+      "imageHint": "lash cleaning foam"
+    },
+    {
+      "id": "reward-birthday",
+      "description": "Birthday Bonus",
+      "imageUrl": "https://picsum.photos/seed/gift/400/300",
+      "imageHint": "beauty gift box"
+    },
+    {
+      "id": "reward-vip",
+      "description": "VIP Priority Booking",
+      "imageUrl": "https://picsum.photos/seed/calendar/400/300",
+      "imageHint": "luxury spa calendar"
+    }
+  ]
+}
