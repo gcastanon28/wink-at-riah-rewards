@@ -29,6 +29,9 @@ export type ProfileRow = {
   tier: string | null;
   phone?: string | null;
   avatar_url?: string | null;
+  email_notifications?: boolean | null;
+  sms_reminders?: boolean | null;
+  marketing_offers?: boolean | null;
 };
 
 export type RedemptionRow = {

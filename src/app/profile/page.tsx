@@ -43,7 +43,10 @@ export default function ProfilePage() {
     setFullName(clientData?.name || "");
     setEmail(clientData?.email || "");
     setAvatarUrl(clientData?.avatar_url || "");
-    setPhone("");
+    setPhone(clientData?.phone || "");
+    setEmailNotifications(clientData?.email_notifications ?? true);
+    setSmsReminders(clientData?.sms_reminders ?? true);
+    setMarketingOffers(clientData?.marketing_offers ?? false);
   }, [clientData]);
 
   const initials = (fullName || clientData?.name || "CL")
@@ -66,15 +69,14 @@ export default function ProfilePage() {
     try {
       setSaving(true);
 
-      const updates: {
-        full_name: string;
-        email: string;
-        phone: string;
-        avatar_url?: string;
-      } = {
-        full_name: fullName,
+      const updates = {
+        full_name: fullName;
         email,
         phone,
+        avatar_url: avatarUrl,
+        email_notifications: emailNotifications,
+        sms_reminders: smsReminders,
+        marketing_offers: marketingOffers,
       };
 
       if (avatarUrl) {

@@ -16,6 +16,10 @@ export type ClientData = {
   nextReward?: number;
   email?: string;
   avatar_url?: string;
+  phone?: string;
+  email_notifications?: boolean;
+  sms_reminders?: boolean;
+  marketing_offers?: boolean;
 };
 
 export type Reward = {
@@ -43,7 +47,11 @@ export function useClientData() {
     tier: "New Member",
     nextReward: 150,
     email: "",
+    phone: "",
     avatar_url: "",
+    email_notifications: true,
+    sms_reminders: true,
+    marketing_offers: false,
   });
 
   const [rewards, setRewards] = useState<Reward[]>([]);
@@ -78,6 +86,10 @@ export function useClientData() {
             nextReward: 150,
             email: profile.email ?? user.email,
             avatar_url: profile.avatar_url || "",
+            phone: profile.phone || "",
+            email_notifications: profile.email_notifications ?? true,
+            sms_reminders: profile.sms_reminders ?? true,
+            marketing_offers: profile.marketing_offers ?? false,
           });
 
           const userRedemptions =
