@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarDays, ChevronRight } from "lucide-react";
-
+import { Sparkles, Calendar, ChevronRight } from "lucide-react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -25,56 +24,43 @@ export default function DashboardPage() {
 
       <SidebarInset className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-5xl space-y-10 p-6 pt-0 md:p-10 md:pt-10 lg:p-12">
-          {/* MOBILE HEADER ONLY FOR DASHBOARD */}
-          <div className="relative -mx-6 md:hidden">
-            <div className="border-b border-white/10 bg-black">
-              <div className="flex items-center gap-4 px-6 py-4 pl-24">
-                <img
-                  src="/logo-full.png"
-                  alt="Wink At Riah"
-                  className="h-16 w-16 rounded-2xl object-cover"
-                />
 
-                <div>
-                  <h2 className="text-2xl font-bold text-primary">
-                    Wink At Riah
-                  </h2>
-                  <p className="text-lg text-muted-foreground">Lash Rewards</p>
-                </div>
-              </div>
-            </div>
+{/* Header Section */}
+{/* Mobile Logo Header */}
+<header className="w-full overflow-hidden md:hidden">
+  <img
+    src="/logo-full.png"
+    alt="Wink At Riah Logo"
+    className="block w-full h-44 object-cover object-[50%_49.5%]"
+  />
+</header>
 
-            {/* spacer so the built-in sidebar trigger stays visible on top */}
-            <div className="pointer-events-none absolute left-4 top-4 z-30">
-              <div className="h-14 w-14 rounded-full" />
-            </div>
-          </div>
+<div className="p-4 md:p-8 space-y-8">
+  {/* Welcome / Hero */}
+  <section className="space-y-4">
+    <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-white">
+      Welcome back,
+      <br />
+      beautiful✨
+    </h1>
 
-          {/* HERO SECTION */}
-          <section className="space-y-6">
-            <div className="space-y-3">
-              <h1 className="text-5xl font-bold leading-tight md:text-7xl">
-                Welcome back,
-                <br />
-                beautiful✨
-              </h1>
+    <p className="text-lg md:text-xl text-muted-foreground italic">
+      Ready for your next glow up at Wink At Riah?{" "}
+      <Sparkles className="inline h-5 w-5 text-pink-400" />
+    </p>
 
-              <p className="text-xl italic text-muted-foreground md:text-2xl">
-                Ready for your next glow up at Wink At Riah? ✨
-              </p>
-            </div>
-
-            <Button
-              asChild
-              className="h-14 rounded-2xl px-8 text-xl font-semibold"
-            >
-              <Link href="https://winkatriah.glossgenius.com/" target="_blank">
-                <CalendarDays className="mr-2 h-5 w-5" />
-                Book Now
-                <ChevronRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-          </section>
+    <a
+      href="https://winkatriah.glossgenius.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <Button className="rounded-2xl px-8 py-6 text-lg">
+        <Calendar className="mr-2 h-5 w-5" />
+        Book Now
+        <ChevronRight className="ml-2 h-5 w-5" />
+      </Button>
+    </a>
+  </section>
 
           {/* REWARDS SUMMARY CARD */}
           <section className="rounded-3xl border border-white/10 bg-card p-8 shadow-xl">
@@ -241,7 +227,8 @@ export default function DashboardPage() {
 </div>
 </section>
 </div>
+</div>
 </SidebarInset>
 </div>
-  );
+);
 }
