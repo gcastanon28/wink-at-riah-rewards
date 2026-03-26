@@ -150,19 +150,21 @@ export function AppSidebar() {
             <Menu className="h-6 w-6" />
           </button>
 
-          <div className="flex items-center gap-3">
-            <img
-              src="/logo.png"
-              alt="Wink At Riah Logo"
-              className="h-12 w-12 rounded-xl object-cover"
-            />
-            <div className="leading-tight">
-              <p className="text-lg font-bold text-pink-400">Wink At Riah</p>
-              <p className="text-sm text-white/60">Lash Rewards</p>
-            </div>
-          </div>
+      {pathname !== "/dashboard" && (
+      <div className="flex items-center gap-3">
+        <img
+          src="/logo.png"
+          alt="Wink At Riah Logo"
+          className="h-12 w-12 rounded-xl object-cover"
+        />
+        <div className="leading-tight">
+          <p className="text-lg font-bold text-pink-400">Wink At Riah</p>
+          <p className="text-sm text-white/60">Lash Rewards</p>
         </div>
       </div>
+    )}
+          </div>
+        </div>
 
       {/* MOBILE DRAWER */}
       {mobileOpen && (
