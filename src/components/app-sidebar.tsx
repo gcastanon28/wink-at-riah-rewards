@@ -82,37 +82,37 @@ export function AppSidebar() {
 
   return (
     <>
-      {/* Mobile menu button */}
+      {/* Mobile hamburger button */}
       <button
         type="button"
         onClick={() => setMobileOpen(true)}
-        className="fixed left-4 top-4 z-50 inline-flex items-center justify-center rounded-lg bg-pink-500 p-2 text-white shadow-lg md:hidden"
-        aria-label="Open member menu"
+        className="fixed left-4 top-4 z-[60] inline-flex h-12 w-12 items-center justify-center rounded-full bg-pink-500 text-white shadow-lg md:hidden"
+        aria-label="Open menu"
       >
-        <Menu className="h-5 w-5" />
+        <Menu className="h-6 w-6" />
       </button>
 
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 md:hidden"
+          className="fixed inset-0 z-[70] bg-black/60 md:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
-      {/* Mobile sidebar */}
+      {/* Mobile slide-out sidebar */}
       <div
         className={cn(
-          "fixed left-0 top-0 z-50 h-full w-[280px] transition-transform duration-300 md:hidden",
+          "fixed left-0 top-0 z-[80] h-full w-[290px] transform bg-background transition-transform duration-300 ease-in-out md:hidden",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <Sidebar className="h-full border-r border-border bg-background">
+        <Sidebar className="h-full w-full border-r border-border">
           <button
             type="button"
             onClick={() => setMobileOpen(false)}
-            className="absolute right-4 top-4 z-50 inline-flex items-center justify-center rounded-lg bg-white/10 p-2 text-white"
-            aria-label="Close member menu"
+            className="absolute right-4 top-4 z-[90] inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white"
+            aria-label="Close menu"
           >
             <X className="h-5 w-5" />
           </button>
@@ -127,7 +127,7 @@ export function AppSidebar() {
                 <img
                   src="/logo.png"
                   alt="Wink At Riah Logo"
-                  className="mx-auto w-44 mb-4 drop-shadow-[0_0_20px_rgba(255,79,198,0.5)]"
+                  className="mx-auto mb-4 w-40 drop-shadow-[0_0_20px_rgba(255,79,198,0.5)]"
                 />
                 <h1 className="text-xl font-bold text-pink-400">Wink At Riah</h1>
                 <p className="text-xs text-white/60">Lash Rewards</p>
@@ -137,7 +137,7 @@ export function AppSidebar() {
 
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel className="px-4 text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
+              <SidebarGroupLabel className="mb-2 px-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">
                 Member Menu
               </SidebarGroupLabel>
 
@@ -153,10 +153,10 @@ export function AppSidebar() {
                             href={item.url}
                             onClick={() => setMobileOpen(false)}
                             className={cn(
-                              "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300",
+                              "flex items-center gap-3 rounded-lg px-4 py-3 transition-all duration-300",
                               isActive
                                 ? "bg-primary text-white"
-                                : "hover:bg-muted text-sidebar-foreground"
+                                : "text-sidebar-foreground hover:bg-muted"
                             )}
                           >
                             <item.icon
@@ -212,7 +212,7 @@ export function AppSidebar() {
                 <img
                   src="/logo.png"
                   alt="Wink At Riah Logo"
-                  className="mx-auto w-44 mb-4 drop-shadow-[0_0_20px_rgba(255,79,198,0.5)]"
+                  className="mx-auto mb-4 w-44 drop-shadow-[0_0_20px_rgba(255,79,198,0.5)]"
                 />
                 <h1 className="text-xl font-bold text-pink-400">Wink At Riah</h1>
                 <p className="text-xs text-white/60">Lash Rewards</p>
@@ -222,7 +222,7 @@ export function AppSidebar() {
 
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel className="px-4 text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
+              <SidebarGroupLabel className="mb-2 px-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">
                 Member Menu
               </SidebarGroupLabel>
 
@@ -237,10 +237,10 @@ export function AppSidebar() {
                           <Link
                             href={item.url}
                             className={cn(
-                              "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300",
+                              "flex items-center gap-3 rounded-lg px-4 py-3 transition-all duration-300",
                               isActive
                                 ? "bg-primary text-white"
-                                : "hover:bg-muted text-sidebar-foreground"
+                                : "text-sidebar-foreground hover:bg-muted"
                             )}
                           >
                             <item.icon
