@@ -23,6 +23,7 @@ import { User, Mail, Phone, Bell, Shield, Save, Camera } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useClientData } from "@/hooks/use-client-data";
 import { supabase } from "@/app/lib/supabase";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 
 export default function ProfilePage() {
   const { clientData } = useClientData();
@@ -340,6 +341,7 @@ export default function ProfilePage() {
             </Button>
           </div>
         </div>
+        <MobileBottomNav />
       </SidebarInset>
     </div>
   );

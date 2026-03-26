@@ -6,6 +6,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useClientData } from "@/hooks/use-client-data";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 
 export default function DashboardPage() {
   const { clientData } = useClientData();
@@ -19,7 +20,7 @@ export default function DashboardPage() {
   const remaining = Math.max(200 - displayPoints, 0);
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="hidden md:block">
       <AppSidebar />
 
       <SidebarInset className="flex-1 overflow-y-auto">
@@ -228,6 +229,7 @@ export default function DashboardPage() {
 </section>
 </div>
 </div>
+<MobileBottomNav />
 </SidebarInset>
 </div>
 );

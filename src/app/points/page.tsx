@@ -5,6 +5,7 @@ import { SidebarInset } from "@/components/ui/sidebar";
 import { PointsOverview } from "@/components/points-overview";
 import { Star, Gift, TrendingUp, Sparkles } from "lucide-react";
 import { useClientData } from "@/hooks/use-client-data";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 
 type ClientData = {
   id: string;
@@ -20,7 +21,7 @@ export default function PointsPage() {
   const { clientData, loading } = useClientData();
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="hidden md:block">
       <AppSidebar />
       <SidebarInset className="flex-1 overflow-y-auto p-6 pt-24 md:p-10 md:pt-10 lg:p-12">
         <div className="max-w-4xl mx-auto space-y-12">
@@ -102,6 +103,7 @@ export default function PointsPage() {
             </div>
           </section>
         </div>
+        <MobileBottomNav />
       </SidebarInset>
     </div>
   );
