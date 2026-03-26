@@ -70,7 +70,7 @@ export default function ProfilePage() {
       setSaving(true);
 
       const updates = {
-        full_name: fullName;
+        full_name: fullName,
         email,
         phone,
         avatar_url: avatarUrl,
@@ -78,10 +78,6 @@ export default function ProfilePage() {
         sms_reminders: smsReminders,
         marketing_offers: marketingOffers,
       };
-
-      if (avatarUrl) {
-        updates.avatar_url = avatarUrl;
-      }
 
       const { error } = await supabase
         .from("profiles")
