@@ -22,7 +22,7 @@ export default function PointsPage() {
   return (
     <div className="flex min-h-screen bg-background">
       <AppSidebar />
-      <SidebarInset className="flex-1 p-6 md:p-10 lg:p-12 overflow-y-auto">
+      <SidebarInset className="flex-1 overflow-y-auto p-6 pt-24 md:p-10 md:pt-10 lg:p-12">
         <div className="max-w-4xl mx-auto space-y-12">
           <header>
             <div className="flex items-center gap-2 text-primary font-bold mb-2 uppercase tracking-widest text-sm">

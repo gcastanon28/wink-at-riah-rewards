@@ -31,7 +31,7 @@ export default function RewardsPage() {
   return (
     <div className="flex min-h-screen bg-background">
       <AppSidebar />
-      <SidebarInset className="flex-1 overflow-y-auto">
+      <SidebarInset className="flex-1 overflow-y-auto p-6 pt-24 md:p-10 md:pt-10 lg:p-12">
         <div className="p-4 md:p-8 space-y-8">
           <section className="space-y-4">
             <p className="text-primary font-semibold uppercase tracking-[0.2em]">
