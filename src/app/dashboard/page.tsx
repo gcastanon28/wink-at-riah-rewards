@@ -1,118 +1,124 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { CalendarDays, ChevronRight } from "lucide-react";
+
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
-import { PointsOverview } from "@/components/points-overview";
-import { AiLashTips } from "@/components/ai-lash-tips";
-import { RewardsCatalog } from "@/components/rewards-catalog";
 import { Button } from "@/components/ui/button";
-import { Calendar, ChevronRight, Sparkles } from "lucide-react";
-import Link from "next/link";
 import { useClientData } from "@/hooks/use-client-data";
 
-type ClientData = {
-  id: string;
-  name: string;
-  points: number;
-  tier: string;
-  nextReward?: number;
-  email?: string;
-};
+export default function DashboardPage() {
+  const { clientData } = useClientData();
 
-type Reward = {
-  id: string;
-  title: string;
-  description: string;
-  pointsRequired: number;
-  active: boolean;
-};
+  const displayTier =
+    clientData?.tier && clientData.tier.trim() !== ""
+      ? clientData.tier
+      : "New Member";
 
-export default function Dashboard() {
- 
-  const { clientData, rewards, loading } = useClientData();
+  const displayPoints = clientData?.points ?? 0;
 
-  return (
-    <div className="flex min-h-screen bg-background">
-      <AppSidebar />
-      <SidebarInset className="flex-1 overflow-y-auto p-6 pt-24 md:p-10 md:pt-10 lg:p-12">
-        {/* Header Section */}
-        {/* Mobile Logo Header */}
-        <header className="w-full overflow-hidden md:hidden">
-          <img
-            src="/logo-full.png"
-            alt="Wink At Riah Logo"
-            className="block w-full h-44 object-cover object-[50%_49.5%]"
-          />
-        </header>
+  const remaining = Math.max(200 - displayPoints, 0);
 
-        <div className="p-4 md:p-8 space-y-8">
-          {/* Welcome / Hero */}
-          <section className="space-y-4">
-            <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-white">
-              Welcome back,
-              <br />
-              beautiful✨
-            </h1>
+  return (
+    <div className="flex min-h-screen bg-background">
+      <AppSidebar />
 
-            <p className="text-lg md:text-xl text-muted-foreground italic">
-              Ready for your next glow up at Wink At Riah? <Sparkles className="inline h-5 w-5 text-primary" />
-            </p>
+      <SidebarInset className="flex-1 overflow-y-auto">
+        <div className="mx-auto max-w-5xl space-y-10 p-6 pt-0 md:p-10 md:pt-10 lg:p-12">
+          {/* MOBILE HEADER ONLY FOR DASHBOARD */}
+          <div className="relative -mx-6 md:hidden">
+            <div className="border-b border-white/10 bg-black">
+              <img
+                src="/logo.png"
+                alt="Wink At Riah"
+                className="h-auto w-full object-cover"
+              />
+            </div>
 
-            <a
-  href="https://winkatriah.glossgenius.com/"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <Button className="rounded-2xl px-8 py-6 text-lg">
-    <Calendar className="mr-2 h-5 w-5" />
-    Book Now
-    <ChevronRight className="ml-2 h-5 w-5" />
-  </Button>
-</a>
+            {/* this keeps the hamburger sitting ON TOP of the header */}
+            <div className="pointer-events-none absolute left-4 top-4 z-30">
+              <div className="pointer-events-auto">
+                {/* empty spacer so the built-in trigger from sidebar stays visually here */}
+              </div>
+            </div>
+          </div>
 
-          </section>
+          <section className="space-y-6">
+            <div className="space-y-3">
+              <h1 className="text-5xl font-bold leading-tight md:text-7xl">
+                Welcome back,
+                <br />
+                beautiful✨
+              </h1>
 
-          {/* Points Overview */}
-          <PointsOverview clientData={clientData} loading={loading} />
+              <p className="text-xl italic text-muted-foreground md:text-2xl">
+                Ready for your next glow up at Wink At Riah? ✨
+              </p>
 
-          {/* VIP Rewards */}
-          <section className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-4xl font-bold text-white">VIP Rewards</h2>
-              <Link
-                href="/rewards"
-                className="text-primary text-2xl font-semibold hover:opacity-80 transition"
-              >
-                View Catalog <ChevronRight className="inline h-6 w-6" />
-              </Link>
-            </div>
+              <Button
+                asChild
+                className="h-14 rounded-2xl px-8 text-xl font-semibold"
+              >
+                <Link href="https://www.vagaro.com/" target="_blank">
+                  <CalendarDays className="mr-2 h-5 w-5" />
+                  Book Now
+                  <ChevronRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
+          </section>
 
-            <RewardsCatalog
-              userPoints={clientData.points}
-              rewards={rewards}
-              clientId={clientData.id}
-            />
-          </section>
+          <section className="rounded-3xl border border-white/10 bg-card p-8 shadow-xl">
+            <h2 className="text-4xl font-bold">Your Lash Rewards</h2>
 
-          {/* AI Lash Tips */}
-          <AiLashTips />
+            <p className="mt-4 text-xl">
+              Status:{" "}
+              <span className="font-bold text-primary">{displayTier}</span>
+            </p>
 
-          {/* Referral */}
-          <section className="rounded-[2rem] bg-primary p-8 text-primary-foreground shadow-xl">
-            <h3 className="text-4xl font-bold mb-4">Refer a Bestie</h3>
-            <p className="text-2xl leading-relaxed mb-8">
-              Gift them $10 off their first full set and earn 100 bonus points for your loyalty.
-            </p>
-            <Button
-              variant="secondary"
-              className="w-full rounded-2xl py-7 text-2xl font-bold"
-            >
-              Get My Link
-            </Button>
-          </section>
-        </div>
-      </SidebarInset>
-    </div>
-  );
+            <div className="mt-6 flex items-end gap-3">
+              <span className="text-7xl font-bold text-primary">
+                {displayPoints}
+              </span>
+              <span className="pb-2 text-3xl font-bold tracking-wide">
+                POINTS
+              </span>
+            </div>
+
+            <div className="mt-8 space-y-3">
+              <div className="flex items-center justify-between text-lg font-semibold">
+                <span>Progress to Next Gift</span>
+                <span className="text-primary">{remaining} points remaining</span>
+              </div>
+
+              <div className="h-4 w-full rounded-full bg-muted">
+                <div
+                  className="h-4 rounded-full bg-primary transition-all"
+                  style={{
+                    width: `${Math.min((displayPoints / 200) * 100, 100)}%`,
+                  }}
+                />
+              </div>
+
+              <p className="text-lg italic text-muted-foreground">
+                You&apos;re glowing! Next unlock: VIP Priority Booking status.
+              </p>
+            </div>
+          </section>
+
+          <section className="grid gap-8 lg:grid-cols-[1fr_auto]">
+            <h2 className="text-5xl font-bold">VIP Rewards</h2>
+
+            <Link
+              href="/rewards"
+              className="text-3xl font-bold text-primary hover:opacity-80"
+            >
+              View Catalog
+            </Link>
+          </section>
+        </div>
+      </SidebarInset>
+    </div>
+  );
 }
