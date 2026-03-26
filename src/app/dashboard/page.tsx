@@ -39,9 +39,7 @@ export default function DashboardPage() {
 
             {/* keeps hamburger positioned ON header */}
             <div className="pointer-events-none absolute left-4 top-4 z-30">
-              <div className="pointer-events-auto">
-                {/* sidebar trigger spacer */}
-              </div>
+              <div className="pointer-events-auto" />
             </div>
           </div>
 
@@ -71,7 +69,7 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          {/* REWARDS CARD */}
+          {/* REWARDS SUMMARY CARD */}
           <section className="rounded-3xl border border-white/10 bg-card p-8 shadow-xl">
             <h2 className="text-4xl font-bold">Your Lash Rewards</h2>
 
@@ -105,7 +103,10 @@ export default function DashboardPage() {
                 <div
                   className="h-4 rounded-full bg-primary transition-all"
                   style={{
-                    width: `${Math.min((displayPoints / 200) * 100, 100)}%`,
+                    width: `${Math.min(
+                      (displayPoints / 200) * 100,
+                      100
+                    )}%`,
                   }}
                 />
               </div>
@@ -116,7 +117,7 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          {/* VIP SECTION */}
+          {/* VIP HEADER */}
           <section className="grid gap-8 lg:grid-cols-[1fr_auto]">
             <h2 className="text-5xl font-bold">VIP Rewards</h2>
 
@@ -126,6 +127,61 @@ export default function DashboardPage() {
             >
               View Catalog
             </Link>
+          </section>
+
+          {/* DASHBOARD REWARD CARDS */}
+          <section className="grid gap-8 md:grid-cols-2">
+
+            {/* CARD 1 */}
+            <div className="rounded-3xl overflow-hidden border border-white/10 bg-card shadow-xl">
+              <img
+                src="/birthday-bonus.jpg"
+                alt="Birthday Bonus"
+                className="h-56 w-full object-cover"
+              />
+
+              <div className="p-6 space-y-4">
+                <div>
+                  <h3 className="text-3xl font-bold">
+                    Birthday Bonus
+                  </h3>
+
+                  <p className="text-xl text-muted-foreground">
+                    Special Birthday Reward 🎉
+                  </p>
+                </div>
+
+                <Button className="w-full h-14 rounded-2xl text-xl font-semibold">
+                  Redeem for 50 pts
+                </Button>
+              </div>
+            </div>
+
+            {/* CARD 2 */}
+            <div className="rounded-3xl overflow-hidden border border-white/10 bg-card shadow-xl">
+              <img
+                src="/priority-booking.jpg"
+                alt="VIP Priority Booking"
+                className="h-56 w-full object-cover"
+              />
+
+              <div className="p-6 space-y-4">
+                <div>
+                  <h3 className="text-3xl font-bold">
+                    VIP Priority Booking
+                  </h3>
+
+                  <p className="text-xl text-muted-foreground">
+                    Early access to premium appointment slots
+                  </p>
+                </div>
+
+                <Button className="w-full h-14 rounded-2xl text-xl font-semibold">
+                  Redeem for 200 pts
+                </Button>
+              </div>
+            </div>
+
           </section>
 
         </div>
