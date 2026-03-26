@@ -134,3 +134,32 @@ export async function createRedemption(data: {
 
   return inserted;
 }
+
+export async function uploadAvatar(file: File, userId: string) {
+  const fileExt = file.name.split(".").pop()
+  const filePath = `${userId}-${Date.now()}.${fileExt}`
+
+  const { error } = await supabase.storage
+    .from("avatars")
+    .upload(filePath, file, {
+      cacheControl: "3600",
+      upsert: true,
+    })
+
+  if (error) {
+    throw error
+  }
+
+  const { data } = supabase.storage.from("avatars").getPublicUrl(filePath)
+
+  return data.publicUrl
+}
+
+export async function updateProfileAvatar(id: string, avatarURL: string) {
+  const { error } = await supabase
+    .from("profiles")
+    .update({ avatar_url: avatarURL })
+    .eq("id", id)
+
+  if (error) throw error
+}

@@ -1,10 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
-
+import { useEffect, useRef, useState } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
-
 import {
   Card,
   CardContent,
@@ -12,50 +10,45 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
-
-import {
-  User,
-  Mail,
-  Phone,
-  Bell,
-  Shield,
-  Save,
-  Camera,
-} from "lucide-react";
-
+import { User, Mail, Phone, Bell, Shield, Save, Camera } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useClientData } from "@/hooks/use-client-data";
-
 import { supabase } from "@/app/lib/supabase";
 
 export default function ProfilePage() {
   const { clientData } = useClientData();
 
-  const [fullName, setFullName] = useState(clientData?.name || "");
-  const [email, setEmail] = useState(clientData?.email || "");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [smsReminders, setSmsReminders] = useState(true);
   const [marketingOffers, setMarketingOffers] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
+  const [avatarUrl, setAvatarUrl] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const initials = (clientData?.name || "CL")
+  useEffect(() => {
+    setFullName(clientData?.name || "");
+    setEmail(clientData?.email || "");
+    setAvatarUrl(clientData?.avatar_url || "");
+    setPhone("");
+  }, [clientData]);
+
+  const initials = (fullName || clientData?.name || "CL")
     .split(" ")
+    .filter(Boolean)
     .map((part) => part[0])
     .join("")
     .slice(0, 2)
@@ -76,7 +69,7 @@ export default function ProfilePage() {
       const updates: {
         full_name: string;
         email: string;
-        phone?: string;
+        phone: string;
         avatar_url?: string;
       } = {
         full_name: fullName,
@@ -133,8 +126,8 @@ export default function ProfilePage() {
       if (uploadError) throw uploadError;
 
       const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
-
       const publicUrl = data.publicUrl;
+
       setAvatarUrl(publicUrl);
 
       const { error: updateError } = await supabase
@@ -165,7 +158,7 @@ export default function ProfilePage() {
     <div className="flex min-h-screen bg-background">
       <AppSidebar />
       <SidebarInset className="flex-1 overflow-y-auto p-6 pt-24 md:p-10 md:pt-10 lg:p-12">
-        <div className="max-w-3xl mx-auto space-y-10">
+        <div className="mx-auto max-w-3xl space-y-10">
           <header>
             <div className="flex items-center gap-2 text-primary font-bold mb-2 uppercase tracking-widest text-sm">
               <User className="h-4 w-4" />
@@ -182,7 +175,7 @@ export default function ProfilePage() {
           <div className="flex justify-center">
             <div className="relative">
               <Avatar className="h-28 w-28 border-4 border-primary/30 shadow-xl">
-                <AvatarImage src={avatarUrl} />
+                <AvatarImage src={avatarUrl || ""} />
                 <AvatarFallback className="bg-primary text-white text-2xl font-bold">
                   {initials}
                 </AvatarFallback>
@@ -207,7 +200,9 @@ export default function ProfilePage() {
           </div>
 
           <p className="text-center text-sm text-muted-foreground">
-            {uploading ? "Uploading profile picture..." : "Tap the camera icon to upload a profile picture."}
+            {uploading
+              ? "Uploading profile picture..."
+              : "Tap the camera icon to upload a profile picture."}
           </p>
 
           <Card className="border-none shadow-xl bg-card">
@@ -217,7 +212,8 @@ export default function ProfilePage() {
                 Personal Information
               </CardTitle>
               <CardDescription>
-                This information is used for appointment reminders and tier calculations.
+                This information is used for appointment reminders and tier
+                calculations.
               </CardDescription>
             </CardHeader>
 
@@ -313,7 +309,10 @@ export default function ProfilePage() {
                     Get a text 24 hours before your session.
                   </p>
                 </div>
-                <Switch checked={smsReminders} onCheckedChange={setSmsReminders} />
+                <Switch
+                  checked={smsReminders}
+                  onCheckedChange={setSmsReminders}
+                />
               </div>
 
               <div className="flex items-center justify-between p-4 bg-muted/20 rounded-2xl border border-border/50">

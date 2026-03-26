@@ -43,6 +43,7 @@ export function useClientData() {
     tier: "New Member",
     nextReward: 150,
     email: "",
+    avatar_url: "",
   });
 
   const [rewards, setRewards] = useState<Reward[]>([]);
@@ -76,6 +77,7 @@ export function useClientData() {
             tier: profile.tier ?? "New Member",
             nextReward: 150,
             email: profile.email ?? user.email,
+            avatar_url: profile.avatar_url || "",
           });
 
           const userRedemptions =
