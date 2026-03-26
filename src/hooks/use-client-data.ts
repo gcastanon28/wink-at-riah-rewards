@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useUser } from "@/firebase";
 import {
+  supabase,
   getRewards,
   getProfileByEmail,
   getRedemptionsByUserId,
@@ -13,8 +13,8 @@ export type ClientData = {
   name: string;
   points: number;
   tier: string;
-  nextReward?: number;
-  email?: string;
+  nextReward: number;
+  email: string;
 };
 
 export type Reward = {
@@ -35,15 +35,13 @@ export type Redemption = {
 };
 
 export function useClientData() {
-  const { user } = useUser();
-
   const [clientData, setClientData] = useState<ClientData>({
     id: "",
-    name: "beautiful✨",
+    name: "",
     points: 0,
     tier: "New Member",
     nextReward: 150,
-    email: user?.email || "",
+    email: "",
   });
 
   const [rewards, setRewards] = useState<Reward[]>([]);
@@ -55,39 +53,51 @@ export function useClientData() {
       try {
         setLoading(true);
 
-        // Load profile by email
-        if (user?.email) {
-          const profile = await getProfileByEmail(user.email);
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
 
-          if (profile) {
-            setClientData({
-              id: profile.id,
-              name: profile.full_name || "beautiful✨",
-              points: profile.points || 0,
-              tier: profile.tier || "New Member",
-              nextReward: 150,
-              email: profile.email || user.email,
-            });
-
-            const userRedemptions = await getRedemptionsByUserId(profile.id);
-            setRedemptions(userRedemptions || []);
-          } else {
-            setClientData({
-              id: "",
-              name: "beautiful✨",
-              points: 0,
-              tier: "New Member",
-              nextReward: 150,
-              email: user.email,
-            });
-            setRedemptions([]);
-          }
+        if (!user?.email) {
+          setLoading(false);
+          return;
         }
 
-        // Load rewards
+        const profile = await getProfileByEmail(user.email);
+
+        if (profile) {
+          setClientData({
+            id: profile.id,
+            name:
+              profile.full_name ||
+              user.email.split("@")[0] ||
+              "Client",
+            points: profile.points ?? 0,
+            tier: profile.tier ?? "New Member",
+            nextReward: 150,
+            email: profile.email ?? user.email,
+          });
+
+          const userRedemptions =
+            await getRedemptionsByUserId(profile.id);
+
+          const mappedRedemptions: Redemption[] = (
+            userRedemptions || []
+          ).map((item: any) => ({
+            id: item.id,
+            rewardTitle: item.reward_title,
+            pointsUsed: item.points_used,
+            userId: item.user_id,
+            createdAt: item.created_at,
+          }));
+
+          setRedemptions(mappedRedemptions);
+        }
+
         const rewardsData = await getRewards();
 
-        const mappedRewards = (rewardsData || []).map((reward: any) => ({
+        const mappedRewards: Reward[] = (
+          rewardsData || []
+        ).map((reward: any) => ({
           id: reward.id,
           title: reward.title,
           description: reward.description,
@@ -105,7 +115,7 @@ export function useClientData() {
     };
 
     loadData();
-  }, [user?.email]);
+  }, []);
 
   return {
     clientData,

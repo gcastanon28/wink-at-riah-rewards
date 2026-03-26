@@ -8,7 +8,11 @@ export const supabase = createClient(
   SUPABASE_ANON_KEY
 );
 
-type RewardRow = {
+/* =========================
+  TYPE DEFINITIONS
+========================= */
+
+export type RewardRow = {
   id: string;
   title: string;
   description: string | null;
@@ -17,16 +21,16 @@ type RewardRow = {
   image_url?: string | null;
 };
 
-type ProfileRow = {
+export type ProfileRow = {
   id: string;
   email: string | null;
   full_name: string | null;
   points: number | null;
-  tier?: string | null;
+  tier: string | null;
   phone?: string | null;
 };
 
-type RedemptionRow = {
+export type RedemptionRow = {
   id: string;
   user_id: string;
   reward_title: string | null;
@@ -36,84 +40,79 @@ type RedemptionRow = {
   created_at?: string | null;
 };
 
-async function supabaseFetch(
-  path: string,
-  options: RequestInit = {}
-) {
-  const res = await fetch(`${SUPABASE_URL}${path}`, {
-    ...options,
-    headers: {
-      apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
-  });
-
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Supabase request failed: ${res.status} ${errorText}`);
-  }
-
-  return res;
-}
+/* =========================
+  REWARDS
+========================= */
 
 export async function getRewards(): Promise<RewardRow[]> {
-  const res = await supabaseFetch(
-    `/rest/v1/rewards?select=*&active=eq.true&order=points_cost.asc`,
-    {
-      method: "GET",
-    }
-  );
+  const { data, error } = await supabase
+    .from("rewards")
+    .select("*")
+    .eq("active", true)
+    .order("points_cost", { ascending: true });
 
-  return res.json();
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
 }
+
+/* =========================
+  PROFILE
+========================= */
 
 export async function getProfileByEmail(
   email: string
 ): Promise<ProfileRow | null> {
-  const encodedEmail = encodeURIComponent(email);
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("email", email)
+    .maybeSingle();
 
-  const res = await supabaseFetch(
-    `/rest/v1/profiles?select=*&email=eq.${encodedEmail}&limit=1`,
-    {
-      method: "GET",
-    }
-  );
+  if (error) {
+    throw error;
+  }
 
-  const data: ProfileRow[] = await res.json();
-  return data[0] || null;
-}
-
-export async function getRedemptionsByUserId(
-  userId: string
-): Promise<RedemptionRow[]> {
-  const res = await supabaseFetch(
-    `/rest/v1/redemptions?select=*&user_id=eq.${userId}&order=created_at.desc`,
-    {
-      method: "GET",
-    }
-  );
-
-  return res.json();
+  return data ?? null;
 }
 
 export async function updateProfilePoints(
   id: string,
   points: number
 ) {
-  const res = await supabaseFetch(
-    `/rest/v1/profiles?id=eq.${id}`,
-    {
-      method: "PATCH",
-      headers: {
-        Prefer: "return=representation",
-      },
-      body: JSON.stringify({ points }),
-    }
-  );
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({ points })
+    .eq("id", id)
+    .select();
 
-  return res.json();
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+/* =========================
+  REDEMPTIONS
+========================= */
+
+export async function getRedemptionsByUserId(
+  userId: string
+): Promise<RedemptionRow[]> {
+  const { data, error } = await supabase
+    .from("redemptions")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
 }
 
 export async function createRedemption(data: {
@@ -123,16 +122,14 @@ export async function createRedemption(data: {
   points_before: number;
   points_after: number;
 }) {
-  const res = await supabaseFetch(
-    `/rest/v1/redemptions`,
-    {
-      method: "POST",
-      headers: {
-        Prefer: "return=representation",
-      },
-      body: JSON.stringify(data),
-    }
-  );
+  const { data: inserted, error } = await supabase
+    .from("redemptions")
+    .insert([data])
+    .select();
 
-  return res.json();
+  if (error) {
+    throw error;
+  }
+
+  return inserted;
 }

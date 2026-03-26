@@ -10,9 +10,10 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { User, Mail, Phone, Bell, Shield, Save } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
-import { MOCK_USER } from "@/app/lib/mock-data"
+import { useClientData } from "@/hooks/use-client-data"
 
 export default function ProfilePage() {
+  const { clientData } = useClientData();
   const handleSave = () => {
     toast({
       title: "Profile Updated",
@@ -49,14 +50,14 @@ export default function ProfilePage() {
                     <Label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Full Name</Label>
                     <div className="relative">
                       <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input id="name" defaultValue={MOCK_USER.name} className="pl-10 h-11 bg-muted/20 border-border/50 rounded-xl" />
+                      <Input id="name" defaultValue={clientData.name} className="pl-10 h-11 bg-muted/20 border-border/50 rounded-xl" />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Email Address</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input id="email" defaultValue={MOCK_USER.email} className="pl-10 h-11 bg-muted/20 border-border/50 rounded-xl" />
+                      <Input id="email" defaultValue={clientData.email} className="pl-10 h-11 bg-muted/20 border-border/50 rounded-xl" />
                     </div>
                   </div>
                   <div className="space-y-2">
