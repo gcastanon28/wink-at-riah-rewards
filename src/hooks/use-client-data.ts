@@ -13,8 +13,9 @@ export type ClientData = {
   name: string;
   points: number;
   tier: string;
-  nextReward: number;
-  email: string;
+  nextReward?: number;
+  email?: string;
+  avatar_url?: string;
 };
 
 export type Reward = {

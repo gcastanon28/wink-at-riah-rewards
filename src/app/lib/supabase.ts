@@ -28,6 +28,7 @@ export type ProfileRow = {
   points: number | null;
   tier: string | null;
   phone?: string | null;
+  avatar_url?: string | null;
 };
 
 export type RedemptionRow = {
