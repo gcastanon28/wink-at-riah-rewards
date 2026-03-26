@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { Sparkles, Calendar, ChevronRight } from "lucide-react";
+
 import { AppSidebar } from "@/components/app-sidebar";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useClientData } from "@/hooks/use-client-data";
-import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 
 export default function DashboardPage() {
   const { clientData } = useClientData();
@@ -20,50 +21,46 @@ export default function DashboardPage() {
   const remaining = Math.max(200 - displayPoints, 0);
 
   return (
-    <div className="hidden md:block">
-      <AppSidebar />
+    <div className="flex min-h-screen bg-background">
+      <div className="hidden md:block">
+        <AppSidebar />
+      </div>
 
       <SidebarInset className="flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-5xl space-y-10 p-6 pt-0 md:p-10 md:pt-10 lg:p-12">
+        <header className="w-full overflow-hidden md:hidden">
+          <img
+            src="/logo-full.png"
+            alt="Wink At Riah Logo"
+            className="block w-full h-44 object-cover object-[50%_49.5%]"
+          />
+        </header>
 
-{/* Header Section */}
-{/* Mobile Logo Header */}
-<header className="w-full overflow-hidden md:hidden">
-  <img
-    src="/logo-full.png"
-    alt="Wink At Riah Logo"
-    className="block w-full h-44 object-cover object-[50%_49.5%]"
-  />
-</header>
+        <div className="mx-auto max-w-5xl p-4 pb-28 md:p-8 md:pb-8 space-y-8">
+          <section className="space-y-4">
+            <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-white">
+              Welcome back,
+              <br />
+              beautiful✨
+            </h1>
 
-<div className="p-4 md:p-8 space-y-8">
-  {/* Welcome / Hero */}
-  <section className="space-y-4">
-    <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-white">
-      Welcome back,
-      <br />
-      beautiful✨
-    </h1>
+            <p className="text-lg md:text-xl text-muted-foreground italic">
+              Ready for your next glow up at Wink At Riah?{" "}
+              <Sparkles className="inline h-5 w-5 text-pink-400" />
+            </p>
 
-    <p className="text-lg md:text-xl text-muted-foreground italic">
-      Ready for your next glow up at Wink At Riah?{" "}
-      <Sparkles className="inline h-5 w-5 text-pink-400" />
-    </p>
+            <a
+              href="https://winkatriah.glossgenius.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button className="rounded-2xl px-8 py-6 text-lg">
+                <Calendar className="mr-2 h-5 w-5" />
+                Book Now
+                <ChevronRight className="ml-2 h-5 w-5" />
+              </Button>
+            </a>
+          </section>
 
-    <a
-      href="https://winkatriah.glossgenius.com/"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <Button className="rounded-2xl px-8 py-6 text-lg">
-        <Calendar className="mr-2 h-5 w-5" />
-        Book Now
-        <ChevronRight className="ml-2 h-5 w-5" />
-      </Button>
-    </a>
-  </section>
-
-          {/* REWARDS SUMMARY CARD */}
           <section className="rounded-3xl border border-white/10 bg-card p-8 shadow-xl">
             <h2 className="text-4xl font-bold">Your Lash Rewards</h2>
 
@@ -102,7 +99,6 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          {/* VIP HEADER */}
           <section className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
             <h2 className="text-5xl font-bold">VIP Rewards</h2>
 
@@ -114,16 +110,13 @@ export default function DashboardPage() {
             </Link>
           </section>
 
-          {/* DASHBOARD REWARD CARDS */}
           <section className="grid gap-8 md:grid-cols-2">
-            {/* Birthday Bonus */}
             <div className="rounded-3xl overflow-hidden border border-white/10 bg-card shadow-xl">
               <img
                 src="/rewards/birthday.jpg"
                 alt="Birthday Bonus"
                 className="h-56 w-full object-cover"
               />
-
               <div className="p-6 space-y-4">
                 <div>
                   <h3 className="text-3xl font-bold">Birthday Bonus</h3>
@@ -131,21 +124,18 @@ export default function DashboardPage() {
                     Special Birthday Reward 🎉
                   </p>
                 </div>
-
                 <Button className="w-full h-14 rounded-2xl text-xl font-semibold">
                   Redeem for 50 pts
                 </Button>
               </div>
             </div>
 
-            {/* Free Lash Bath */}
             <div className="rounded-3xl overflow-hidden border border-white/10 bg-card shadow-xl">
               <img
                 src="/rewards/lash-bath.jpg"
                 alt="Free Lash Bath"
                 className="h-56 w-full object-cover"
               />
-
               <div className="p-6 space-y-4">
                 <div>
                   <h3 className="text-3xl font-bold">Free Lash Bath</h3>
@@ -153,21 +143,18 @@ export default function DashboardPage() {
                     Complimentary Lash Bath
                   </p>
                 </div>
-
                 <Button className="w-full h-14 rounded-2xl text-xl font-semibold">
                   Redeem for 75 pts
                 </Button>
               </div>
             </div>
 
-            {/* $10 Off Fill */}
             <div className="rounded-3xl overflow-hidden border border-white/10 bg-card shadow-xl">
               <img
                 src="/rewards/fill.jpg"
                 alt="$10 Off Fill"
                 className="h-56 w-full object-cover"
               />
-
               <div className="p-6 space-y-4">
                 <div>
                   <h3 className="text-3xl font-bold">$10 Off Fill</h3>
@@ -175,62 +162,58 @@ export default function DashboardPage() {
                     Save $10 On Your Next Fill.
                   </p>
                 </div>
-
                 <Button className="w-full h-14 rounded-2xl text-xl font-semibold">
                   Redeem for 100 pts
                 </Button>
               </div>
             </div>
 
-            {/* VIP Priority Booking */}
             <div className="rounded-3xl overflow-hidden border border-white/10 bg-card shadow-xl">
               <img
                 src="/rewards/vip.jpg"
                 alt="VIP Priority Booking"
                 className="h-56 w-full object-cover"
               />
-
               <div className="p-6 space-y-4">
                 <div>
                   <h3 className="text-3xl font-bold">VIP Priority Booking</h3>
                   <p className="text-xl text-muted-foreground">
-                    Skip the waitlist and get first access to peak appointment
-                    slots.
+                    Skip the waitlist and get first access to peak appointment slots.
                   </p>
                 </div>
-
                 <Button className="w-full h-14 rounded-2xl text-xl font-semibold">
                   Redeem for 150 pts
                 </Button>
               </div>
             </div>
 
-{/* Refer a Bestie */}
-<div className="rounded-3xl border border-white/10 bg-card shadow-xl md:col-span-2">
-  <div className="p-6 space-y-4">
-    <div>
-      <h3 className="text-3xl font-bold">Refer a Bestie</h3>
-      <p className="text-xl text-muted-foreground">
-        Earn bonus points when your friend books their first visit 💖
-      </p>
-    </div>
+            <div className="rounded-3xl border border-white/10 bg-card shadow-xl md:col-span-2">
+              <div className="p-6 space-y-4">
+                <div>
+                  <h3 className="text-3xl font-bold">Refer a Bestie</h3>
+                  <p className="text-xl text-muted-foreground">
+                    Earn bonus points when your friend books their first visit 💖
+                  </p>
+                </div>
 
-    <Button
-      className="w-full h-14 rounded-2xl text-xl font-semibold"
-      onClick={() => {
-        navigator.clipboard.writeText("https://wink-at-riah.com/referral");
-        alert("Referral link copied!");
-      }}
-    >
-      Copy Referral Link
-    </Button>
-  </div>
-</div>
-</section>
-</div>
-</div>
-<MobileBottomNav />
-</SidebarInset>
-</div>
-);
+                <Button
+                  className="w-full h-14 rounded-2xl text-xl font-semibold"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      "https://wink-at-riah.com/referral"
+                    );
+                    alert("Referral link copied!");
+                  }}
+                >
+                  Copy Referral Link
+                </Button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </SidebarInset>
+
+      <MobileBottomNav />
+    </div>
+  );
 }

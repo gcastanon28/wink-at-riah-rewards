@@ -24,20 +24,18 @@ export function MobileBottomNav() {
 
             return (
             <Link
-            key={item.href}
-            href={item.href}
-            className={`flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs transition ${
-                isActive
-                ? "text-pink-400"
-                : "text-white/70 hover:text-white"
+                key={item.href}
+                href={item.href}
+                className={`flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs transition ${
+                isActive ? "text-pink-400" : "text-white/70 hover:text-white"
             }`}
             >
-            <Icon className={`h-5 w-5 ${isActive ? "text-pink-400" : ""}`} />
-            <span className="truncate">{item.title}</span>
+                <Icon className="h-5 w-5" />
+                <span className="truncate">{item.title}</span>
             </Link>
         );
         })}
-    </div>
+        </div>
     </nav>
 );
 }
