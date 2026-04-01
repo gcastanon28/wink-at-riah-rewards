@@ -155,7 +155,10 @@ export default function ProfilePage() {
 
   return (
     <div className="flex min-h-screen bg-background">
-      <AppSidebar />
+      <div className="hidden md:block">
+        <AppSidebar />
+      </div>
+      
       <SidebarInset className="flex-1 overflow-y-auto p-6 pt-24 md:p-10 md:pt-10 lg:p-12">
         <div className="mx-auto max-w-3xl space-y-10">
           <header>
