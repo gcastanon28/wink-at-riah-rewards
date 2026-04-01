@@ -30,8 +30,11 @@ export default function RewardsPage() {
   const { clientData, rewards, loading } = useClientData();
 
   return (
-    <div className="hidden md:block">
-      <AppSidebar />
+    <div className="flex min-h-screen bg-background">
+      <div className="hidden md:block">
+        <AppSidebar />
+      </div>
+
       <SidebarInset className="flex-1 overflow-y-auto p-6 pt-24 md:p-10 md:pt-10 lg:p-12">
         <div className="p-4 md:p-8 space-y-8">
           <section className="space-y-4">
