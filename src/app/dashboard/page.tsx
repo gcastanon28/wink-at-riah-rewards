@@ -198,14 +198,26 @@ export default function DashboardPage() {
 
                 <Button
                   className="w-full h-14 rounded-2xl text-xl font-semibold"
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      "https://wink-at-riah.com/referral"
-                    );
-                    alert("Referral link copied!");
+                  onClick={async () => {
+                    const referralLink = "https://wink-at-riah-rewards.vercel.app";
+                    
+                    try {
+                      if  (navigator.share) {
+                        await navigator.share({
+                          title: "Wink At Riah Rewards 💖",
+                          text: "Join Wink At Riah Rewards and earn perks!",
+                          url: referralLink,
+                        });
+                      } else {
+                        await navigator.clipboard.writeText(referralLink);
+                        alert("Referral link copied!");
+                      }
+                    } catch (error) {
+                      console.error(error);
+                    }
                   }}
                 >
-                  Copy Referral Link
+                  Refer a Bestie
                 </Button>
               </div>
             </div>
