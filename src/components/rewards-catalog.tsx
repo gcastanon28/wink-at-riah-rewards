@@ -1,11 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import {
-  createRedemption,
-  updateProfilePoints,
-} from "@/app/lib/supabase";
+import { createRedemption, updateProfilePoints, } from "@/app/lib/supabase";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 
 type Reward = {
   id: string;
@@ -90,14 +88,21 @@ export function RewardsCatalog({
       });
 
       setCurrentPoints(newPoints);
-      alert("Reward redeemed successfully!");
+
+      toast({
+        title: "Reward redeemed!",
+        description: "Show this reward during your next visit ✨",
+      })
+
       window.location.reload();
     } catch (err) {
       console.error(err);
-      alert("Something went wrong redeeming reward.");
-    } finally {
-      setRedeemingId(null);
-    }
+
+      toast({
+        title: "Redemption failed",
+        description: "Please try again.",
+        variant: "destructive",
+    })
   };
 
   if (!mergedRewards.length) {
@@ -117,12 +122,12 @@ export function RewardsCatalog({
         };
 
         const locked = currentPoints < reward.pointsRequired;
+        const pointsNeeded = reward.pointsRequired - currentPoints;
 
         return (
           <div
             key={reward.id}
-            className="overflow-hidden rounded-[2rem] border border-white/10 bg-card text-white shadow-xl"
-          >
+            className="overflow-hidden rounded-[2rem] border border-white/10 bg-card text-white shadow-xl">
             <div className="relative h-48 w-full overflow-hidden">
               <img
                 src={reward.image_url || visual.image}
@@ -136,7 +141,7 @@ export function RewardsCatalog({
               {locked && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/10">
                   <div className="rounded-full bg-white/20 px-6 py-6 backdrop-blur-md border border-white/30">
-                    🔒
+                    <span className="text-2xl">🔒</span>
                   </div>
                 </div>
               )}
@@ -155,12 +160,11 @@ export function RewardsCatalog({
               <Button
                 onClick={() => handleRedeem(reward)}
                 disabled={locked || redeemingId === reward.id}
-                className="w-full rounded-2xl py-7 text-xl font-bold"
-              >
+                className="w-full rounded-2xl py-7 text-xl font-bold">
                 {redeemingId === reward.id
                   ? "Redeeming..."
                   : locked
-                  ? `Need ${reward.pointsRequired} pts`
+                  ? `Need ${pointsNeeded} more pts`
                   : `Redeem for ${reward.pointsRequired} pts`}
               </Button>
             </div>
