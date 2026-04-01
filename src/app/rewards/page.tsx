@@ -36,7 +36,7 @@ export default function RewardsPage() {
       </div>
 
       <SidebarInset className="flex-1 overflow-y-auto p-6 pt-6 md:p-10 md:pt-10 lg:p-12">
-        <div className="p-4 md:p-8 space-y-8">
+        <div className="p-4 md:p-8 space-y-8 pb-28 md:pb-0">
           <section className="space-y-4">
             <p className="text-primary font-semibold uppercase tracking-[0.2em]">
               Member Privileges

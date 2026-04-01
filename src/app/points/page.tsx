@@ -26,7 +26,7 @@ export default function PointsPage() {
         </div>
 
       <SidebarInset className="flex-1 overflow-y-auto p-6 pt-6 md:p-10 md:pt-10 lg:p-12">
-        <div className="max-w-4xl mx-auto space-y-12">
+        <div className="max-w-4xl mx-auto space-y-12 pb-28 md:pb-0">
           <header>
             <div className="flex items-center gap-2 text-primary font-bold mb-2 uppercase tracking-widest text-sm">
               <Star className="h-4 w-4" />
