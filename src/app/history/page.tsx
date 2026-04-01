@@ -22,7 +22,7 @@ export default function HistoryPage() {
         <AppSidebar />
       </div>
 
-      <SidebarInset className="flex-1 overflow-y-auto p-6 pt-24 md:p-10 md:pt-10 lg:p-12">
+      <SidebarInset className="flex-1 overflow-y-auto p-6 pt-6 md:p-10 md:pt-10 lg:p-12">
         <div className="max-w-5xl mx-auto space-y-10">
           <header>
             <p className="text-primary font-bold uppercase tracking-widest text-sm mb-2">
