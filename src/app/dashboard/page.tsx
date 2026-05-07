@@ -8,9 +8,19 @@ import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useClientData } from "@/hooks/use-client-data";
+import { useAuthGuard } from "@/hooks/use-auth-guard";
 
 export default function DashboardPage() {
   const { clientData } = useClientData();
+  const { checkingAuth } = useAuthGuard();
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">
+        Loading rewards...
+      </div>
+    );
+  }
 
   const displayTier =
     clientData?.tier && clientData.tier.trim() !== ""

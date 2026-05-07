@@ -22,11 +22,13 @@ import {
 import { User, Mail, Phone, Bell, Shield, Save, Camera } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useClientData } from "@/hooks/use-client-data";
+import { useAuthGuard } from "@/hooks/use-auth-guard";
 import { supabase } from "@/app/lib/supabase";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 
 export default function ProfilePage() {
   const { clientData } = useClientData();
+  const { checkingAuth } = useAuthGuard();
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -57,6 +59,14 @@ export default function ProfilePage() {
     .join("")
     .slice(0, 2)
     .toUpperCase();
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">
+        Loading profile...
+      </div>
+    );
+  }
 
   const handleSave = async () => {
     if (!clientData?.id) {

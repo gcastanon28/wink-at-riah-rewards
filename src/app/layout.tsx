@@ -3,7 +3,6 @@ import type { Metadata } from "next"
 import "./globals.css"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { Toaster } from "@/components/ui/toaster"
-import { FirebaseClientProvider } from "@/firebase"
 
 export const metadata: Metadata = {
   title: "Wink At Riah Rewards | Luxury Lash Loyalty",
@@ -18,12 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-body antialiased">
-        <FirebaseClientProvider>
-          <SidebarProvider>
-            {children}
-            <Toaster />
-          </SidebarProvider>
-        </FirebaseClientProvider>
+        <SidebarProvider>
+          {children}
+          <Toaster />
+        </SidebarProvider>
       </body>
     </html>
   )

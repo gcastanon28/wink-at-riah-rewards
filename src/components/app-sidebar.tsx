@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Gift,
@@ -12,9 +12,11 @@ import {
   Sparkles,
   Menu,
   X,
+  LogOut,
 } from "lucide-react";
 
 import { useClientData } from "@/hooks/use-client-data";
+import { supabase } from "@/app/lib/supabase";
 import { cn } from "@/lib/utils";
 import {
   Avatar,
@@ -32,8 +34,10 @@ const items = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { clientData } = useClientData();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [signingOut, setSigningOut] = React.useState(false);
 
   const displayName =
     clientData?.name && clientData.name.trim() !== ""
@@ -60,6 +64,16 @@ export function AppSidebar() {
   React.useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
+
+  const handleSignOut = async () => {
+    try {
+      setSigningOut(true);
+      await supabase.auth.signOut();
+      router.replace("/login");
+    } finally {
+      setSigningOut(false);
+    }
+  };
 
   return (
     <>
@@ -135,6 +149,15 @@ export function AppSidebar() {
               </p>
             </div>
           </Link>
+          <button
+            type="button"
+            onClick={handleSignOut}
+            disabled={signingOut}
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 px-4 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/5 hover:text-white disabled:opacity-60"
+          >
+            <LogOut className="h-4 w-4 text-pink-400" />
+            {signingOut ? "Signing out..." : "Sign out"}
+          </button>
         </div>
       </aside>
 
@@ -259,6 +282,15 @@ export function AppSidebar() {
                   </p>
                 </div>
               </Link>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                disabled={signingOut}
+                className="mt-4 flex w-full items-center justify-center gap-3 rounded-2xl border border-white/10 px-4 py-4 text-lg font-semibold text-white/80 transition hover:bg-white/5 disabled:opacity-60"
+              >
+                <LogOut className="h-5 w-5 text-pink-400" />
+                {signingOut ? "Signing out..." : "Sign out"}
+              </button>
             </div>
           </div>
         </>

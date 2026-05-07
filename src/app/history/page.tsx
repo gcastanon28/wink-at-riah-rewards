@@ -3,6 +3,7 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { useClientData } from "@/hooks/use-client-data";
+import { useAuthGuard } from "@/hooks/use-auth-guard";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 
 function formatDate(createdAt: any) {
@@ -10,11 +11,21 @@ function formatDate(createdAt: any) {
   if (typeof createdAt?.toDate === "function") {
     return createdAt.toDate().toLocaleDateString();
   }
-  return "—";
+  const parsed = new Date(createdAt);
+  return Number.isNaN(parsed.getTime()) ? "—" : parsed.toLocaleDateString();
 }
 
 export default function HistoryPage() {
   const { clientData, redemptions, loading } = useClientData();
+  const { checkingAuth } = useAuthGuard();
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">
+        Loading rewards...
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-background">

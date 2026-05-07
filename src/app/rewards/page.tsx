@@ -5,29 +5,20 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { RewardsCatalog } from "@/components/rewards-catalog";
 import { useClientData } from "@/hooks/use-client-data";
+import { useAuthGuard } from "@/hooks/use-auth-guard";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 
-type ClientData = {
-  id: string;
-  name: string;
-  points: number;
-  tier: string;
-  nextReward?: number;
-  email?: string;
-};
-
-type Reward = {
-  id: string;
-  title: string;
-  description: string;
-  pointsRequired: number;
-  active: boolean;
-  image_url?: string;
-};
-
 export default function RewardsPage() {
-
   const { clientData, rewards, loading } = useClientData();
+  const { checkingAuth } = useAuthGuard();
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">
+        Loading rewards...
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-background">

@@ -25,18 +25,20 @@ export type ClientData = {
 export type Reward = {
   id: string;
   title: string;
-  description: string;
-  pointsRequired: number;
+  description: string | null;
+  points_cost: number;
   active: boolean;
-  image_url?: string;
+  image_url?: string | null;
 };
 
 export type Redemption = {
   id: string;
   rewardTitle: string;
   pointsUsed: number;
+  pointsBefore?: number;
+  pointsAfter?: number;
   userId: string;
-  createdAt: any;
+  createdAt?: string | null;
 };
 
 export function useClientData() {
@@ -64,8 +66,10 @@ export function useClientData() {
         setLoading(true);
 
         const {
-          data: { user },
-        } = await supabase.auth.getUser();
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        const user = session?.user;
 
         if (!user?.email) {
           setLoading(false);
@@ -101,6 +105,8 @@ export function useClientData() {
             id: item.id,
             rewardTitle: item.reward_title,
             pointsUsed: item.points_used,
+            pointsBefore: item.points_before,
+            pointsAfter: item.points_after,
             userId: item.user_id,
             createdAt: item.created_at,
           }));
@@ -116,7 +122,7 @@ export function useClientData() {
           id: reward.id,
           title: reward.title,
           description: reward.description,
-          pointsRequired: reward.points_cost,
+          points_cost: reward.points_cost,
           active: reward.active,
           image_url: reward.image_url,
         }));

@@ -5,6 +5,7 @@ import { SidebarInset } from "@/components/ui/sidebar";
 import { PointsOverview } from "@/components/points-overview";
 import { Star, Gift, TrendingUp, Sparkles } from "lucide-react";
 import { useClientData } from "@/hooks/use-client-data";
+import { useAuthGuard } from "@/hooks/use-auth-guard";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 
 type ClientData = {
@@ -18,6 +19,15 @@ type ClientData = {
 
 export default function PointsPage() {
   const { clientData, loading } = useClientData();
+  const { checkingAuth } = useAuthGuard();
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">
+        Loading rewards...
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-background">

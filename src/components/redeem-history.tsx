@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useUser } from "@/firebase";
+import { supabase } from "@/app/lib/supabase";
 import { getProfileByEmail, getRedemptionsByUserId } from "@/app/lib/supabase";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -16,13 +16,16 @@ type Redemption = {
 };
 
 export function RedeemHistory() {
-  const { user } = useUser();
   const [redemptions, setRedemptions] = useState<Redemption[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRedemptions = async () => {
       try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
         if (!user?.email) {
           setRedemptions([]);
           return;
@@ -36,7 +39,17 @@ export function RedeemHistory() {
         }
 
         const items = await getRedemptionsByUserId(profile.id);
-        setRedemptions(items || []);
+        setRedemptions(
+          (items || []).map((item) => ({
+            id: item.id,
+            rewardTitle: item.reward_title || "Reward",
+            pointsUsed: item.points_used || 0,
+            pointsBefore: item.points_before ?? undefined,
+            pointsAfter: item.points_after ?? undefined,
+            userId: item.user_id,
+            createdAt: item.created_at ?? undefined,
+          }))
+        );
       } catch (error) {
         console.error("Failed to load redemption history:", error);
       } finally {
@@ -45,7 +58,7 @@ export function RedeemHistory() {
     };
 
     fetchRedemptions();
-  }, [user?.email]);
+  }, []);
 
   return (
     <Card className="border-none rounded-3xl bg-white/[0.04] backdrop-blur-md shadow-xl shadow-black/30">

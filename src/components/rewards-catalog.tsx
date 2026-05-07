@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { createRedemption, updateProfilePoints, } from "@/app/lib/supabase";
+import { createRedemption, updateProfilePoints } from "@/app/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
 type Reward = {
   id: string;
   title: string;
-  description: string;
-  pointsRequired: number;
+  description: string | null;
+  points_cost: number;
   active: boolean;
-  image_url?: string;
+  image_url?: string | null;
 };
 
 type RewardsCatalogProps = {
@@ -60,14 +60,14 @@ export function RewardsCatalog({
   const mergedRewards = useMemo(() => {
     const activeRewards = rewards.filter((reward) => reward.active);
     return activeRewards.sort(
-      (a, b) => a.pointsRequired - b.pointsRequired
+      (a, b) => a.points_cost - b.points_cost
     );
   }, [rewards]);
 
   const handleRedeem = async (reward: Reward) => {
     if (!clientId) return;
 
-    if (currentPoints < reward.pointsRequired) {
+    if (currentPoints < reward.points_cost) {
       alert("Not enough points.");
       return;
     }
@@ -75,14 +75,14 @@ export function RewardsCatalog({
     try {
       setRedeemingId(reward.id);
 
-      const newPoints = currentPoints - reward.pointsRequired;
+      const newPoints = currentPoints - reward.points_cost;
 
       await updateProfilePoints(clientId, newPoints);
 
       await createRedemption({
         user_id: clientId,
         reward_title: reward.title,
-        points_used: reward.pointsRequired,
+        points_used: reward.points_cost,
         points_before: currentPoints,
         points_after: newPoints,
       });
@@ -91,7 +91,7 @@ export function RewardsCatalog({
 
       toast({
         title: "Reward redeemed!",
-        description: "Show this reward during your next visit ✨",
+        description: "Show this reward during your next visit.",
       })
 
       window.location.reload();
@@ -102,7 +102,10 @@ export function RewardsCatalog({
         title: "Redemption failed",
         description: "Please try again.",
         variant: "destructive",
-    })
+      })
+    } finally {
+      setRedeemingId(null);
+    }
   };
 
   if (!mergedRewards.length) {
@@ -121,8 +124,8 @@ export function RewardsCatalog({
           fallback: "/logo-full.png",
         };
 
-        const locked = currentPoints < reward.pointsRequired;
-        const pointsNeeded = reward.pointsRequired - currentPoints;
+        const locked = currentPoints < reward.points_cost;
+        const pointsNeeded = reward.points_cost - currentPoints;
 
         return (
           <div
@@ -153,7 +156,7 @@ export function RewardsCatalog({
                   {reward.title}
                 </h3>
                 <p className="mt-2 text-lg text-white/70">
-                  {reward.description}
+                  {reward.description || "Reward details coming soon."}
                 </p>
               </div>
 
@@ -165,7 +168,7 @@ export function RewardsCatalog({
                   ? "Redeeming..."
                   : locked
                   ? `Need ${pointsNeeded} more pts`
-                  : `Redeem for ${reward.pointsRequired} pts`}
+                  : `Redeem for ${reward.points_cost} pts`}
               </Button>
             </div>
           </div>
@@ -173,4 +176,4 @@ export function RewardsCatalog({
       })}
     </div>
   );
-  }}
+}

@@ -3,21 +3,37 @@
 
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { useUser } from "@/firebase"
+import { supabase } from "@/app/lib/supabase"
 
 export default function HomePage() {
   const router = useRouter()
-  const { user, loading } = useUser()
 
   useEffect(() => {
-    if (loading) return
+    let active = true
 
-    if (user) {
-      router.push("/dashboard")
-    } else {
-      router.push("/login")
+    async function redirectForSession() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (!active) return
+
+      router.replace(session ? "/dashboard" : "/login")
     }
-  }, [user, loading, router])
+
+    redirectForSession()
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      router.replace(session ? "/dashboard" : "/login")
+    })
+
+    return () => {
+      active = false
+      subscription.unsubscribe()
+    }
+  }, [router])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background text-white">

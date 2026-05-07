@@ -4,8 +4,8 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
+  SUPABASE_URL || "https://placeholder.supabase.co",
+  SUPABASE_ANON_KEY || "placeholder-anon-key"
 );
 
 /* =========================
@@ -140,7 +140,7 @@ export async function createRedemption(data: {
 
 export async function uploadAvatar(file: File, userId: string) {
   const fileExt = file.name.split(".").pop()
-  const filePath = `${userId}-${Date.now()}.${fileExt}`
+  const filePath = `${userId}/avatar-${Date.now()}.${fileExt}`
 
   const { error } = await supabase.storage
     .from("avatars")

@@ -21,39 +21,45 @@
       "properties": {
         "title": { "type": "string", "description": "Name of the reward." },
         "description": { "type": "string", "description": "Details about the reward." },
-        "pointsRequired": { "type": "number", "description": "Points needed to redeem." },
+        "points_cost": { "type": "number", "description": "Points needed to redeem." },
         "active": { "type": "boolean", "description": "Whether the reward is currently available." }
       },
-      "required": ["title", "pointsRequired", "active"]
+      "required": ["title", "points_cost", "active"]
     },
     "Redemption": {
       "title": "Redemption",
       "description": "A record of a reward being claimed by a client.",
       "type": "object",
       "properties": {
-        "userId": { "type": "string", "description": "The ID of the client who redeemed." },
-        "rewardTitle": { "type": "string", "description": "The title of the reward redeemed." },
-        "pointsUsed": { "type": "number", "description": "Points deducted for this redemption." },
-        "createdAt": { "type": "string", "format": "date-time", "description": "When the redemption occurred." }
+        "user_id": { "type": "string", "description": "The ID of the client who redeemed." },
+        "reward_title": { "type": "string", "description": "The title of the reward redeemed." },
+        "points_used": { "type": "number", "description": "Points deducted for this redemption." },
+        "created_at": { "type": "string", "format": "date-time", "description": "When the redemption occurred." }
       },
-      "required": ["userId", "rewardTitle", "pointsUsed", "createdAt"]
+      "required": ["user_id", "reward_title", "points_used", "created_at"]
     }
   },
   "auth": {
-    "providers": ["password", "google"]
+    "provider": "supabase",
+    "methods": ["email_password"]
   },
-  "firestore": {
-    "/clients/{clientId}": {
+  "supabase": {
+    "profiles": {
       "schema": "Client",
-      "description": "User profile and point balance."
+      "description": "User profile, point balance, tier, and communication preferences. The row id should match auth.users.id."
     },
-    "/rewards/{rewardId}": {
+    "rewards": {
       "schema": "Reward",
       "description": "Catalog of redeemable beauty services."
     },
-    "/redemptions/{redemptionId}": {
+    "redemptions": {
       "schema": "Redemption",
       "description": "Log of point usage."
+    },
+    "storage": {
+      "avatars": {
+        "description": "Profile avatar uploads keyed by user profile id."
+      }
     }
   }
 }

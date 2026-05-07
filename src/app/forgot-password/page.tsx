@@ -2,8 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { sendPasswordResetEmail } from "firebase/auth"
-import { auth } from "@/app/firebase"
+import { supabase } from "@/app/lib/supabase"
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
@@ -18,7 +17,17 @@ export default function ForgotPasswordPage() {
     setMessage("")
 
     try {
-      await sendPasswordResetEmail(auth, email)
+      const redirectTo =
+        typeof window !== "undefined"
+          ? `${window.location.origin}/login`
+          : undefined
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo,
+      })
+
+      if (error) throw error
+
       setMessage("Password reset email sent.")
     } catch (error: any) {
       setError(error.message || "Could not send reset email")
