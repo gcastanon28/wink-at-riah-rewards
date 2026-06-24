@@ -13,10 +13,12 @@ import {
   Menu,
   X,
   LogOut,
+  UserPlus,
 } from "lucide-react";
 
 import { useClientData } from "@/hooks/use-client-data";
 import { supabase } from "@/app/lib/supabase";
+import { isStaffEmail } from "@/lib/staff";
 import { cn } from "@/lib/utils";
 import {
   Avatar,
@@ -30,6 +32,10 @@ const items = [
   { title: "Rewards Catalog", url: "/rewards", icon: Gift },
   { title: "Visit History", url: "/history", icon: History },
   { title: "Profile", url: "/profile", icon: User },
+];
+
+const staffItems = [
+  { title: "Add Points", url: "/staff/points", icon: UserPlus },
 ];
 
 export function AppSidebar() {
@@ -53,6 +59,10 @@ export function AppSidebar() {
     (clientData as any)?.avatar_url && (clientData as any).avatar_url.trim() !== ""
       ? (clientData as any).avatar_url
       : "";
+
+  const menuItems = isStaffEmail(clientData?.email)
+    ? [...items, ...staffItems]
+    : items;
 
   const initials = displayName
     .split(" ")
@@ -100,7 +110,7 @@ export function AppSidebar() {
           </p>
 
           <nav className="space-y-2">
-            {items.map((item) => {
+            {menuItems.map((item) => {
               const isActive = pathname === item.url;
               const Icon = item.icon;
 
@@ -232,7 +242,7 @@ export function AppSidebar() {
                 </p>
 
                 <nav className="space-y-3">
-                  {items.map((item) => {
+                  {menuItems.map((item) => {
                     const isActive = pathname === item.url;
                     const Icon = item.icon;
 

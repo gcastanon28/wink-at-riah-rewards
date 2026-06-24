@@ -3,10 +3,11 @@ import { createClient } from "@supabase/supabase-js";
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-export const supabase = createClient(
-  SUPABASE_URL || "https://placeholder.supabase.co",
-  SUPABASE_ANON_KEY || "placeholder-anon-key"
-);
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  throw new Error("Missing Supabase public environment variables.");
+}
+
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* =========================
   TYPE DEFINITIONS
@@ -42,6 +43,27 @@ export type RedemptionRow = {
   points_before?: number | null;
   points_after?: number | null;
   created_at?: string | null;
+};
+
+export type StaffCustomerRow = {
+  id: string;
+  email: string | null;
+  full_name: string | null;
+  phone: string | null;
+  points: number;
+  tier: string | null;
+  updated_at: string | null;
+};
+
+export type StaffAwardPointsResult = {
+  user_id: string;
+  email: string | null;
+  full_name: string | null;
+  points_before: number;
+  points_after: number;
+  points_change: number;
+  reason: string;
+  created_at: string;
 };
 
 /* =========================
@@ -82,23 +104,6 @@ export async function getProfileByEmail(
   return data ?? null;
 }
 
-export async function updateProfilePoints(
-  id: string,
-  points: number
-) {
-  const { data, error } = await supabase
-    .from("profiles")
-    .update({ points })
-    .eq("id", id)
-    .select();
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
 /* =========================
   REDEMPTIONS
 ========================= */
@@ -119,23 +124,50 @@ export async function getRedemptionsByUserId(
   return data ?? [];
 }
 
-export async function createRedemption(data: {
-  user_id: string;
-  reward_title: string;
-  points_used: number;
-  points_before: number;
-  points_after: number;
-}) {
-  const { data: inserted, error } = await supabase
-    .from("redemptions")
-    .insert([data])
-    .select();
+export async function redeemReward(rewardId: string): Promise<RedemptionRow> {
+  const { data, error } = await supabase
+    .rpc("redeem_reward", { p_reward_id: rewardId })
+    .single();
 
   if (error) {
     throw error;
   }
 
-  return inserted;
+  return data as RedemptionRow;
+}
+
+export async function searchStaffCustomers(
+  search: string
+): Promise<StaffCustomerRow[]> {
+  const { data, error } = await supabase.rpc("owner_search_profiles", {
+    p_search: search,
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return (data ?? []) as StaffCustomerRow[];
+}
+
+export async function awardStaffPoints(
+  userId: string,
+  points: number,
+  reason: string
+): Promise<StaffAwardPointsResult> {
+  const { data, error } = await supabase
+    .rpc("owner_award_points", {
+      p_user_id: userId,
+      p_points: points,
+      p_reason: reason,
+    })
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data as StaffAwardPointsResult;
 }
 
 export async function uploadAvatar(file: File, userId: string) {

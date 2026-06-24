@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
     try {
       const redirectTo =
         typeof window !== "undefined"
-          ? `${window.location.origin}/login`
+          ? `${window.location.origin}/reset-password`
           : undefined
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -28,7 +28,7 @@ export default function ForgotPasswordPage() {
 
       if (error) throw error
 
-      setMessage("Password reset email sent.")
+      setMessage("Password reset email sent. Open the link in your email to choose a new password.")
     } catch (error: any) {
       setError(error.message || "Could not send reset email")
     } finally {
@@ -46,6 +46,9 @@ export default function ForgotPasswordPage() {
         <form onSubmit={handleReset} className="space-y-4">
           <input
             type="email"
+            name="email"
+            autoComplete="email"
+            inputMode="email"
             placeholder="Your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}

@@ -1,0 +1,27 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - heading "Welcome Back" [level=1] [ref=e5]
+      - paragraph [ref=e6]: Log in to your Wink At Riah rewards account.
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]: Email
+          - textbox [ref=e10]
+        - generic [ref=e11]:
+          - generic [ref=e12]: Password
+          - textbox [ref=e13]
+        - button "Log In" [ref=e14] [cursor=pointer]
+      - paragraph [ref=e15]:
+        - text: Don’t have an account?
+        - link "Sign up" [ref=e16] [cursor=pointer]:
+          - /url: /signup
+      - navigation [ref=e17]:
+        - link "Privacy" [ref=e18] [cursor=pointer]:
+          - /url: /privacy
+        - link "Terms" [ref=e19] [cursor=pointer]:
+          - /url: /terms
+        - link "Support" [ref=e20] [cursor=pointer]:
+          - /url: /support
+    - region "Notifications (F8)":
+      - list
+  - alert [ref=e21]

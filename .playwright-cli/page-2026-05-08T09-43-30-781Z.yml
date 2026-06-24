@@ -1,0 +1,6 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]: Loading rewards...
+    - region "Notifications (F8)":
+      - list
+  - alert [ref=e4]

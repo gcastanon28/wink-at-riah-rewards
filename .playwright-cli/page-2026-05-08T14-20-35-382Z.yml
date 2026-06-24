@@ -1,0 +1,75 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e8]:
+      - img [ref=e9]
+      - generic [ref=e11]:
+        - paragraph [ref=e12]: We are investigating a technical issue
+        - generic [ref=e13]:
+          - generic [ref=e14]: ·
+          - generic [ref=e15]:
+            - text: Follow the
+            - link "status page" [ref=e16] [cursor=pointer]:
+              - /url: https://status.supabase.com
+            - text: for updates
+    - generic [ref=e19]:
+      - navigation [ref=e21]:
+        - link "Supabase Logo" [ref=e24] [cursor=pointer]:
+          - /url: https://supabase.com
+          - img "Supabase Logo" [ref=e25]
+        - link "Documentation" [ref=e27] [cursor=pointer]:
+          - /url: https://supabase.com/docs
+          - img [ref=e29]
+          - generic [ref=e32]: Documentation
+      - generic [ref=e33]:
+        - main [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]:
+              - heading "Welcome back" [level=1] [ref=e37]
+              - heading "Sign in to your account" [level=2] [ref=e38]
+            - generic [ref=e39]:
+              - button "Continue with GitHub" [ref=e42] [cursor=pointer]:
+                - img [ref=e44]
+                - generic [ref=e47]: Continue with GitHub
+              - link "Continue with SSO" [ref=e50] [cursor=pointer]:
+                - /url: /dashboard/sign-in-sso?returnTo=%2Fproject%2Fwbjtcxdtrmlitjcunvip%2Fauth%2Fproviders
+                - img [ref=e52]
+                - generic [ref=e55]: Continue with SSO
+              - generic [ref=e60]: or
+              - generic [ref=e61]:
+                - generic [ref=e63]:
+                  - generic [ref=e66]: Email
+                  - textbox "Email" [ref=e69]:
+                    - /placeholder: you@example.com
+                - generic [ref=e70]:
+                  - generic [ref=e72]:
+                    - generic [ref=e75]: Password
+                    - generic [ref=e78]:
+                      - textbox "Password" [ref=e79]:
+                        - /placeholder: ••••••••
+                      - button "Show password" [ref=e80] [cursor=pointer]:
+                        - img [ref=e82]
+                  - link "Forgot password?" [ref=e85] [cursor=pointer]:
+                    - /url: /dashboard/forgot-password?returnTo=%2Fproject%2Fwbjtcxdtrmlitjcunvip%2Fauth%2Fproviders
+                - button "Sign in" [ref=e88] [cursor=pointer]:
+                  - generic [ref=e89]: Sign in
+            - generic [ref=e91]:
+              - text: Don’t have an account?
+              - link "Sign up" [ref=e92] [cursor=pointer]:
+                - /url: /dashboard/sign-up?returnTo=%2Fproject%2Fwbjtcxdtrmlitjcunvip%2Fauth%2Fproviders
+          - paragraph [ref=e94]:
+            - text: By continuing, you agree to Supabase’s
+            - link "Terms of Service" [ref=e95] [cursor=pointer]:
+              - /url: https://supabase.com/terms
+            - text: and
+            - link "Privacy Policy" [ref=e96] [cursor=pointer]:
+              - /url: https://supabase.com/privacy
+            - text: ", and to receive periodic emails with updates."
+        - complementary [ref=e97]:
+          - generic [ref=e98]:
+            - generic [ref=e99]: “
+            - blockquote [ref=e100]: Me using @supabase for the first time right now 🤯
+            - link "nasiscoe @nasiscoe" [ref=e101] [cursor=pointer]:
+              - /url: https://twitter.com/nasiscoe/status/1365140856035024902
+              - img "nasiscoe" [ref=e102]
+              - generic [ref=e104]: "@nasiscoe"
+  - alert [ref=e105]: Supabase

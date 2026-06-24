@@ -1,9 +1,17 @@
+import {dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import type {NextConfig} from 'next';
+
+const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   /* config options here */
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  outputFileTracingRoot: projectRoot,
+  turbopack: {
+    root: projectRoot,
   },
   images: {
     remotePatterns: [

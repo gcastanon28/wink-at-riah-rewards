@@ -1,5 +1,7 @@
 "use client";
 
+import { getNextRewardProgress } from "@/lib/rewards-progress";
+
 type ClientData = {
   id?: string;
   name: string;
@@ -14,16 +16,21 @@ type PointsOverviewProps = {
   loading?: boolean;
 };
 
+function toTitleCase(value: string) {
+  return value
+    .trim()
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
+
 export function PointsOverview({
   clientData,
   loading = false,
 }: PointsOverviewProps) {
   const points = clientData?.points ?? 0;
-  const tier = clientData?.tier ?? "New Member";
-  const nextReward = clientData?.nextReward ?? 150;
-
-  const remaining = Math.max(nextReward - points, 0);
-  const progress = nextReward > 0 ? Math.min((points / nextReward) * 100, 100) : 0;
+  const tier = clientData?.tier ? toTitleCase(clientData.tier) : "New Member";
+  const progressInfo = getNextRewardProgress(points);
 
   return (
     <section className="bg-card rounded-3xl border border-border/50 p-8 shadow-sm">
@@ -48,19 +55,25 @@ export function PointsOverview({
             <div className="flex items-center justify-between text-sm md:text-base">
               <span className="font-semibold">Progress to Next Gift</span>
               <span className="text-primary font-bold">
-                {loading ? "Loading..." : `${remaining} points remaining`}
+                {loading
+                  ? "Loading..."
+                  : progressInfo.allUnlocked
+                  ? "All rewards unlocked"
+                  : `${progressInfo.remaining} points remaining`}
               </span>
             </div>
 
             <div className="h-3 w-full rounded-full bg-muted overflow-hidden">
               <div
                 className="h-full rounded-full bg-primary transition-all duration-500"
-                style={{ width: `${progress}%` }}
+                style={{ width: `${progressInfo.progress}%` }}
               />
             </div>
 
             <p className="text-sm text-muted-foreground italic pt-1">
-              You're glowing! Next unlock: VIP Priority Booking status.
+              {progressInfo.allUnlocked
+                ? "All current rewards are unlocked. Visit the catalog to redeem."
+                : `You're glowing! Next unlock: ${progressInfo.nextReward.title}.`}
             </p>
           </div>
         </div>

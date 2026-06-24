@@ -1,0 +1,16 @@
+- main [ref=e4]:
+  - generic [ref=e8]:
+    - generic [ref=e10]:
+      - img "Twilio SendGrid Logo" [ref=e12]
+      - generic [ref=e13]:
+        - generic [ref=e16]:
+          - generic: Username (this may be your email address)
+          - textbox "Username (this may be your email address)" [active] [ref=e17]
+        - link "Forgot your username?" [ref=e20] [cursor=pointer]:
+          - /url: /login/forgot-username
+        - generic [ref=e25]:
+          - button "Continue" [disabled]
+    - generic [ref=e27]:
+      - text: Don't have a Twilio SendGrid account?
+      - link "Sign up now!" [ref=e28] [cursor=pointer]:
+        - /url: https://signup.sendgrid.com/

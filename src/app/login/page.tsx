@@ -10,10 +10,55 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showResendConfirmation, setShowResendConfirmation] = useState(false);
+
+  const confirmationRedirectTo =
+    typeof window !== "undefined" ? `${window.location.origin}/login` : undefined;
+
+  const resendConfirmation = async () => {
+    if (!email) {
+      setErrorMessage("Enter your email first.");
+      return;
+    }
+
+    try {
+      setResending(true);
+      setErrorMessage("");
+      setMessage("");
+
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email,
+        options: {
+          emailRedirectTo: confirmationRedirectTo,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      setMessage("Confirmation email resent. Check your inbox and spam folder.");
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Could not resend confirmation email.";
+      setErrorMessage(message);
+    } finally {
+      setResending(false);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setMessage("");
+    setErrorMessage("");
+    setShowResendConfirmation(false);
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -23,7 +68,10 @@ export default function LoginPage() {
     setLoading(false);
 
     if (error) {
-      alert(error.message);
+      setErrorMessage(error.message);
+      setShowResendConfirmation(
+        error.message.toLowerCase().includes("email not confirmed")
+      );
       return;
     }
 
@@ -42,6 +90,9 @@ export default function LoginPage() {
             <label className="block text-sm mb-2">Email</label>
             <input
               type="email"
+              name="email"
+              autoComplete="email"
+              inputMode="email"
               className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -50,9 +101,16 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm mb-2">Password</label>
+            <div className="mb-2 flex items-center justify-between gap-4">
+              <label className="block text-sm">Password</label>
+              <Link href="/forgot-password" className="text-xs text-pink-300 hover:text-pink-200">
+                Forgot password?
+              </Link>
+            </div>
             <input
               type="password"
+              name="current-password"
+              autoComplete="current-password"
               className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -60,13 +118,27 @@ export default function LoginPage() {
             />
           </div>
 
+          {message && <p className="text-sm text-green-400">{message}</p>}
+          {errorMessage && <p className="text-sm text-red-400">{errorMessage}</p>}
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-pink-500 px-4 py-3 font-semibold text-white"
+            className="w-full rounded-xl bg-pink-500 px-4 py-3 font-semibold text-white disabled:opacity-60"
           >
             {loading ? "Logging in..." : "Log In"}
           </button>
+
+          {showResendConfirmation && (
+            <button
+              type="button"
+              onClick={resendConfirmation}
+              disabled={resending || !email}
+              className="w-full rounded-xl border border-pink-400/50 px-4 py-3 font-semibold text-pink-200 transition hover:border-pink-300 hover:bg-pink-500/10 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {resending ? "Resending..." : "Resend Confirmation Email"}
+            </button>
+          )}
         </form>
 
         <p className="mt-6 text-sm text-white/70">
@@ -75,6 +147,21 @@ export default function LoginPage() {
             Sign up
           </Link>
         </p>
+
+        <nav className="mt-4 flex flex-wrap gap-4 text-xs text-white/50">
+          <Link href="/privacy" className="hover:text-pink-400">
+            Privacy
+          </Link>
+          <Link href="/terms" className="hover:text-pink-400">
+            Terms
+          </Link>
+          <Link href="/support" className="hover:text-pink-400">
+            Support
+          </Link>
+          <Link href="/contact" className="hover:text-pink-400">
+            Contact
+          </Link>
+        </nav>
       </div>
     </div>
   );

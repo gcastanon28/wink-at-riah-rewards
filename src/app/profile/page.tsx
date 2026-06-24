@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 import {
@@ -19,7 +20,18 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
-import { User, Mail, Phone, Bell, Shield, Save, Camera } from "lucide-react";
+import {
+  AlertTriangle,
+  Bell,
+  Camera,
+  LogOut,
+  Mail,
+  Phone,
+  Save,
+  Shield,
+  Trash2,
+  User,
+} from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useClientData } from "@/hooks/use-client-data";
 import { useAuthGuard } from "@/hooks/use-auth-guard";
@@ -29,6 +41,7 @@ import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 export default function ProfilePage() {
   const { clientData } = useClientData();
   const { checkingAuth } = useAuthGuard();
+  const router = useRouter();
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -38,6 +51,9 @@ export default function ProfilePage() {
   const [marketingOffers, setMarketingOffers] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -101,8 +117,6 @@ export default function ProfilePage() {
         title: "Profile Updated",
         description: "Your changes have been saved successfully.",
       });
-
-      window.location.reload();
     } catch (error) {
       console.error(error);
       toast({
@@ -150,8 +164,6 @@ export default function ProfilePage() {
         title: "Profile photo updated",
         description: "Your new profile picture has been uploaded.",
       });
-
-      window.location.reload();
     } catch (error) {
       console.error(error);
       toast({
@@ -160,6 +172,87 @@ export default function ProfilePage() {
       });
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      setSigningOut(true);
+      const { error } = await supabase.auth.signOut();
+
+      if (error) throw error;
+
+      router.replace("/login");
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Sign out failed",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSigningOut(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const normalizedEmail = email.trim().toLowerCase();
+    const typedEmail = deleteConfirmation.trim().toLowerCase();
+
+    if (!normalizedEmail || typedEmail !== normalizedEmail) {
+      toast({
+        title: "Email confirmation required",
+        description: "Type your email address exactly to delete your account.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Delete your Wink At Riah Rewards account? This permanently removes your login, profile, points, reward history, and profile photo."
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setDeletingAccount(true);
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session?.access_token) {
+        throw new Error("Your session expired. Please log in and try again.");
+      }
+
+      const response = await fetch("/api/account/delete", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      const result = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        throw new Error(result.error || "Could not delete account.");
+      }
+
+      await supabase.auth.signOut();
+      router.replace("/signup");
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Please contact support to delete your account.";
+
+      toast({
+        title: "Account deletion failed",
+        description: message,
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingAccount(false);
     }
   };
 
@@ -242,6 +335,8 @@ export default function ProfilePage() {
                     <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="name"
+                      name="name"
+                      autoComplete="name"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       className="pl-10 h-11 bg-muted/20 border-border/50 rounded-xl"
@@ -260,6 +355,10 @@ export default function ProfilePage() {
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="email"
+                      name="email"
+                      type="email"
+                      inputMode="email"
+                      autoComplete="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="pl-10 h-11 bg-muted/20 border-border/50 rounded-xl"
@@ -278,6 +377,10 @@ export default function ProfilePage() {
                     <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="phone"
+                      name="tel"
+                      type="tel"
+                      inputMode="tel"
+                      autoComplete="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="(555) 000-0000"
@@ -351,6 +454,73 @@ export default function ProfilePage() {
             >
               <Save className="mr-2 h-5 w-5" />
               {saving ? "Saving..." : "Save Changes"}
+            </Button>
+          </div>
+
+          <Card className="border border-red-500/30 bg-red-950/20 shadow-xl">
+            <CardHeader>
+              <CardTitle className="font-headline flex items-center gap-2 text-red-100">
+                <AlertTriangle className="h-5 w-5 text-red-300" />
+                Delete Account
+              </CardTitle>
+              <CardDescription className="text-red-100/70">
+                Permanently remove your login, profile, points, reward history,
+                and profile photo. This cannot be undone.
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label
+                  htmlFor="delete-confirmation"
+                  className="text-xs font-bold uppercase tracking-widest text-red-100/70"
+                >
+                  Type your email to confirm
+                </Label>
+                <Input
+                  id="delete-confirmation"
+                  type="email"
+                  inputMode="email"
+                  autoComplete="off"
+                  value={deleteConfirmation}
+                  onChange={(event) =>
+                    setDeleteConfirmation(event.target.value)
+                  }
+                  placeholder={email || "your@email.com"}
+                  className="h-11 rounded-xl border-red-400/30 bg-red-950/20 text-white placeholder:text-red-100/40"
+                />
+              </div>
+
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={handleDeleteAccount}
+                disabled={
+                  deletingAccount ||
+                  deleteConfirmation.trim().toLowerCase() !==
+                    email.trim().toLowerCase()
+                }
+                className="h-12 w-full rounded-2xl font-bold md:w-auto"
+              >
+                <Trash2 className="mr-2 h-5 w-5" />
+                {deletingAccount ? "Deleting..." : "Delete My Account"}
+              </Button>
+            </CardContent>
+          </Card>
+
+          <div className="md:hidden rounded-3xl border border-white/10 bg-card p-5 shadow-xl">
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+              Account Access
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleSignOut}
+              disabled={signingOut}
+              className="h-14 w-full rounded-2xl border-white/10 bg-transparent text-base font-bold text-white hover:bg-white/5 hover:text-white"
+            >
+              <LogOut className="mr-2 h-5 w-5 text-primary" />
+              {signingOut ? "Signing out..." : "Sign out"}
             </Button>
           </div>
         </div>

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { createRedemption, updateProfilePoints } from "@/app/lib/supabase";
-import { Button } from "@/components/ui/button";
+import { redeemReward } from "@/app/lib/supabase";
+import { RewardCard } from "@/components/reward-card";
 import { toast } from "@/hooks/use-toast";
 
 type Reward = {
@@ -45,6 +45,18 @@ const rewardVisuals: Record<
   },
 };
 
+function isBirthdayOnlyReward(title: string) {
+  return title.trim().toLowerCase() === "birthday bonus";
+}
+
+function getRewardDescription(reward: Reward) {
+  if (isBirthdayOnlyReward(reward.title)) {
+    return "Special birthday-month reward 🎉";
+  }
+
+  return reward.description || "Reward details coming soon.";
+}
+
 export function RewardsCatalog({
   userPoints,
   rewards,
@@ -68,24 +80,19 @@ export function RewardsCatalog({
     if (!clientId) return;
 
     if (currentPoints < reward.points_cost) {
-      alert("Not enough points.");
+      toast({
+        title: "Not enough points",
+        description: "Keep earning points to unlock this reward.",
+        variant: "destructive",
+      });
       return;
     }
 
     try {
       setRedeemingId(reward.id);
 
-      const newPoints = currentPoints - reward.points_cost;
-
-      await updateProfilePoints(clientId, newPoints);
-
-      await createRedemption({
-        user_id: clientId,
-        reward_title: reward.title,
-        points_used: reward.points_cost,
-        points_before: currentPoints,
-        points_after: newPoints,
-      });
+      const redemption = await redeemReward(reward.id);
+      const newPoints = redemption.points_after ?? currentPoints - reward.points_cost;
 
       setCurrentPoints(newPoints);
 
@@ -93,8 +100,6 @@ export function RewardsCatalog({
         title: "Reward redeemed!",
         description: "Show this reward during your next visit.",
       })
-
-      window.location.reload();
     } catch (err) {
       console.error(err);
 
@@ -117,61 +122,36 @@ export function RewardsCatalog({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="grid gap-8 md:grid-cols-2">
       {mergedRewards.map((reward) => {
         const visual = rewardVisuals[reward.title] || {
           image: reward.image_url || "/logo-full.png",
           fallback: "/logo-full.png",
         };
 
-        const locked = currentPoints < reward.points_cost;
+        const birthdayOnly = isBirthdayOnlyReward(reward.title);
+        const locked = birthdayOnly || currentPoints < reward.points_cost;
         const pointsNeeded = reward.points_cost - currentPoints;
 
         return (
-          <div
+          <RewardCard
             key={reward.id}
-            className="overflow-hidden rounded-[2rem] border border-white/10 bg-card text-white shadow-xl">
-            <div className="relative h-48 w-full overflow-hidden">
-              <img
-                src={reward.image_url || visual.image}
-                alt={reward.title}
-                className="h-full w-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.src = visual.fallback;
-                }}
-              />
-
-              {locked && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/10">
-                  <div className="rounded-full bg-white/20 px-6 py-6 backdrop-blur-md border border-white/30">
-                    <span className="text-2xl">🔒</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="space-y-4 p-6">
-              <div>
-                <h3 className="text-2xl font-headline font-bold">
-                  {reward.title}
-                </h3>
-                <p className="mt-2 text-lg text-white/70">
-                  {reward.description || "Reward details coming soon."}
-                </p>
-              </div>
-
-              <Button
-                onClick={() => handleRedeem(reward)}
-                disabled={locked || redeemingId === reward.id}
-                className="w-full rounded-2xl py-7 text-xl font-bold">
-                {redeemingId === reward.id
-                  ? "Redeeming..."
-                  : locked
-                  ? `Need ${pointsNeeded} more pts`
-                  : `Redeem for ${reward.points_cost} pts`}
-              </Button>
-            </div>
-          </div>
+            title={reward.title}
+            description={getRewardDescription(reward)}
+            image={reward.image_url || visual.image}
+            fallbackImage={visual.fallback}
+            disabled={locked || redeemingId === reward.id}
+            onClick={() => handleRedeem(reward)}
+            buttonLabel={
+              redeemingId === reward.id
+                ? "Redeeming..."
+                : birthdayOnly
+                ? "Birthday Month Only"
+                : locked
+                ? `Need ${pointsNeeded} More Points`
+                : `Redeem For ${reward.points_cost} Points`
+            }
+          />
         );
       })}
     </div>

@@ -61,10 +61,10 @@ export default function PointsPage() {
 
               <div className="space-y-4">
                 {[
-                  { title: "Lash Services", detail: "1 Point per $1 spent", icon: Sparkles },
-                  { title: "Aftercare Products", detail: "2 Points per $1 spent", icon: Gift },
-                  { title: "Refer a Bestie", detail: "100 Points per referral", icon: Star },
-                  { title: "Birthday Treat", detail: "50 Bonus Points", icon: Gift },
+                  { title: "Completed Appointment", detail: "+5 Points", icon: Sparkles },
+                  { title: "Prebook Next Fill", detail: "+5 Points", icon: Gift },
+                  { title: "Birthday Month", detail: "+10 Points", icon: Star },
+                  { title: "Leave a Review", detail: "+2 to +3 Points", icon: Gift },
                 ].map((item, i) => (
                   <div
                     key={i}

@@ -1,5 +1,18 @@
-# Firebase Studio
+# Wink At Riah Rewards
 
-This is a NextJS starter in Firebase Studio.
+Next.js loyalty app for Wink At Riah clients.
 
-To get started, take a look at src/app/page.tsx.
+## Environment
+
+Set these variables in local and production environments:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_APP_URL`
+
+## Launch Docs
+
+- `docs/deployment.md`
+- `docs/launch-checklist.md`
+- `docs/reward-business-rules.md`
+- `docs/staff-points-workflow.md`

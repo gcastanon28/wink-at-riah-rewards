@@ -1,0 +1,29 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - heading "Create Account" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Join Wink At Riah rewards.
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: Full Name
+        - textbox [ref=e10]
+      - generic [ref=e11]:
+        - generic [ref=e12]: Email
+        - textbox [ref=e13]
+      - generic [ref=e14]:
+        - generic [ref=e15]: Password
+        - textbox [ref=e16]
+      - button "Sign Up" [ref=e17] [cursor=pointer]
+      - button "Resend Confirmation Email" [disabled] [ref=e18]
+    - paragraph [ref=e19]:
+      - text: Already have an account?
+      - link "Log in" [ref=e20] [cursor=pointer]:
+        - /url: /login
+    - navigation [ref=e21]:
+      - link "Privacy" [ref=e22] [cursor=pointer]:
+        - /url: /privacy
+      - link "Terms" [ref=e23] [cursor=pointer]:
+        - /url: /terms
+      - link "Support" [ref=e24] [cursor=pointer]:
+        - /url: /support
+  - region "Notifications (F8)":
+    - list
