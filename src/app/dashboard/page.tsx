@@ -24,18 +24,18 @@ const dashboardRewards = [
     birthdayOnly: true,
   },
   {
-    title: "Free Lash Bath",
-    description: "Complimentary Lash Bath",
+    title: "Free Lash Shampoo",
+    description: "Complimentary Lash Shampoo",
     image: "/rewards/lash-bath.jpg",
-    imageAlt: "Free Lash Bath",
-    pointsCost: 75,
+    imageAlt: "Free Lash Shampoo",
+    pointsCost: 100,
   },
   {
     title: "$10 Off Fill",
     description: "Save $10 On Your Next Fill.",
     image: "/rewards/fill.jpg",
     imageAlt: "$10 Off Fill",
-    pointsCost: 100,
+    pointsCost: 150,
   },
   {
     title: "VIP Priority Booking",

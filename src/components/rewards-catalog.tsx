@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { redeemReward } from "@/app/lib/supabase";
 import { RewardCard } from "@/components/reward-card";
 import { toast } from "@/hooks/use-toast";
+import { getRewardCatalogItem } from "@/lib/rewards";
 
 type Reward = {
   id: string;
@@ -18,31 +19,6 @@ type RewardsCatalogProps = {
   userPoints: number;
   rewards: Reward[];
   clientId: string;
-};
-
-const rewardVisuals: Record<
-  string,
-  {
-    image: string;
-    fallback: string;
-  }
-> = {
-  "Birthday Bonus": {
-    image: "/rewards/birthday.jpg",
-    fallback: "/logo-full.png",
-  },
-  "Free Lash Bath": {
-    image: "/rewards/lash-bath.jpg",
-    fallback: "/logo-full.png",
-  },
-  "$10 Off Fill": {
-    image: "/rewards/fill.jpg",
-    fallback: "/logo-full.png",
-  },
-  "VIP Priority Booking": {
-    image: "/rewards/vip.jpg",
-    fallback: "/logo-full.png",
-  },
 };
 
 function isBirthdayOnlyReward(title: string) {
@@ -70,7 +46,24 @@ export function RewardsCatalog({
   }, [userPoints]);
 
   const mergedRewards = useMemo(() => {
-    const activeRewards = rewards.filter((reward) => reward.active);
+    const activeRewards = rewards
+      .filter((reward) => reward.active)
+      .map((reward) => {
+        const catalogItem = getRewardCatalogItem(reward.title);
+
+        if (!catalogItem) {
+          return reward;
+        }
+
+        return {
+          ...reward,
+          title: catalogItem.title,
+          description: catalogItem.description,
+          points_cost: catalogItem.pointsCost,
+          image_url: catalogItem.image,
+        };
+      });
+
     return activeRewards.sort(
       (a, b) => a.points_cost - b.points_cost
     );
@@ -124,10 +117,16 @@ export function RewardsCatalog({
   return (
     <div className="grid gap-8 md:grid-cols-2">
       {mergedRewards.map((reward) => {
-        const visual = rewardVisuals[reward.title] || {
-          image: reward.image_url || "/logo-full.png",
-          fallback: "/logo-full.png",
-        };
+        const catalogItem = getRewardCatalogItem(reward.title);
+        const visual = catalogItem
+          ? {
+              image: catalogItem.image,
+              fallback: "/logo-full.png",
+            }
+          : {
+              image: reward.image_url || "/logo-full.png",
+              fallback: "/logo-full.png",
+            };
 
         const birthdayOnly = isBirthdayOnlyReward(reward.title);
         const locked = birthdayOnly || currentPoints < reward.points_cost;
@@ -138,7 +137,7 @@ export function RewardsCatalog({
             key={reward.id}
             title={reward.title}
             description={getRewardDescription(reward)}
-            image={reward.image_url || visual.image}
+            image={visual.image}
             fallbackImage={visual.fallback}
             disabled={locked || redeemingId === reward.id}
             onClick={() => handleRedeem(reward)}

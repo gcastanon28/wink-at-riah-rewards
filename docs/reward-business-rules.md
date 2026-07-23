@@ -5,8 +5,8 @@
 | Reward | Point Cost | Rule |
 | --- | ---: | --- |
 | Birthday Bonus | 50 | Birthday-month reward or owner-approved surprise reward. |
-| Free Lash Bath | 75 | Complimentary lash bath redeemable at a future visit. |
-| $10 Off Fill | 100 | $10 credit toward a future fill appointment. |
+| Free Lash Shampoo | 100 | Complimentary lash shampoo redeemable at a future visit. |
+| $10 Off Fill | 150 | $10 credit toward a future fill appointment. |
 | VIP Priority Booking | 150 | Priority access to peak appointment slots when available. |
 
 ## Earning Points

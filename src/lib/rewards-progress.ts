@@ -6,8 +6,8 @@ export type RewardMilestone = {
 
 export const REWARD_MILESTONES: RewardMilestone[] = [
   { title: "Birthday Bonus", pointsCost: 50, birthdayOnly: true },
-  { title: "Free Lash Bath", pointsCost: 75 },
-  { title: "$10 Off Fill", pointsCost: 100 },
+  { title: "Free Lash Shampoo", pointsCost: 100 },
+  { title: "$10 Off Fill", pointsCost: 150 },
   { title: "VIP Priority Booking", pointsCost: 150 },
 ];
 

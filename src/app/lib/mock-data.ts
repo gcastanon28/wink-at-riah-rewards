@@ -62,15 +62,15 @@ export const MOCK_REWARDS: RewardItem[] = [
   },
   {
     id: "reward-bath",
-    title: "Free Lash Bath",
-    points: 75,
-    description: "Deep cleaning treatment to keep your extensions fresh and healthy.",
+    title: "Free Lash Shampoo",
+    points: 100,
+    description: "Complimentary Lash Shampoo",
     imageUrl: "/rewards/lash-bath.jpg"
   },
   {
     id: "reward-fill",
     title: "$10 Off Fill",
-    points: 100,
+    points: 150,
     description: "Apply a credit to your next maintenance appointment.",
     imageUrl: "/rewards/fill.jpg"
   },
